@@ -1,0 +1,106 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Admin Dashboard</h1>
+    <p>Welcome to the admin dashboard</p>
+  </div>
+
+  <div class="dashboard-content">
+    <div class="dashboard-card">
+      <h2>🎯 Dashboard Overview</h2>
+      <p>
+        This is the admin-only dashboard page. You're seeing this because you
+        have admin privileges.
+      </p>
+    </div>
+
+    <div class="dashboard-stats">
+      <div class="stat-card">
+        <h3>Total Users</h3>
+        <p class="stat-number">{{ users.length }}</p>
+      </div>
+      <div class="stat-card">
+        <h3>Active Users</h3>
+        <p class="stat-number">{{ activeUsersCount }}</p>
+      </div>
+      <div class="stat-card">
+        <h3>System Status</h3>
+        <p class="stat-status">✅ Online</p>
+      </div>
+    </div>
+
+    <!-- Users List -->
+    <div class="dashboard-card">
+      <h2>👥 Users Management</h2>
+
+      @if (isLoading) {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Loading users...</p>
+      </div>
+      } @if (errorMessage && !isLoading) {
+      <div class="error-container">
+        <p class="error-message">{{ errorMessage }}</p>
+      </div>
+      } @if (!isLoading && !errorMessage && users.length > 0) {
+      <div class="users-table-container">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Name</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Face Auth</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (user of users; track user.id) {
+            <tr>
+              <td class="username-cell">
+                <span class="username">{{ user.userName }}</span>
+              </td>
+              <td class="email-cell">{{ user.email }}</td>
+              <td>{{ user.firstName }} {{ user.lastName }}</td>
+              <td>
+                <span [class]="'role-badge ' + getRoleBadgeClass(user.role)">
+                  {{ user.role }}
+                </span>
+              </td>
+              <td>
+                <span
+                  [class]="
+                    'status-badge ' +
+                    (user.isActive ? 'status-active' : 'status-inactive')
+                  "
+                >
+                  {{ user.isActive ? "✓ Active" : "✗ Inactive" }}
+                </span>
+              </td>
+              <td class="text-center">
+                <span
+                  [class]="
+                    'face-auth-badge ' +
+                    (user.faceAuthEnabled ? 'enabled' : 'disabled')
+                  "
+                >
+                  {{ user.faceAuthEnabled ? "✓" : "✗" }}
+                </span>
+              </td>
+              <td class="date-cell">
+                {{ user.createdAt ? (user.createdAt | date : "short") : "N/A" }}
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      } @if (!isLoading && !errorMessage && users.length === 0) {
+      <div class="empty-state">
+        <p>No users found</p>
+      </div>
+      }
+    </div>
+  </div>
+</div>

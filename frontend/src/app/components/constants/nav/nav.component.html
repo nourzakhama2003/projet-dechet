@@ -1,0 +1,20 @@
+<nav class="modern-nav">
+  <div class="nav-items">
+    <ng-container *ngFor="let link of links">
+      <a
+        *ngIf="
+          (link.name !== 'dashboard' && link.name !== 'All-Bookings') ||
+          (link.name === 'dashboard' && admin) ||
+          (link.name === 'All-Bookings' && admin)
+        "
+        [routerLink]="link.path"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-link"
+      >
+        <span class="nav-link-text">{{ link.name }}</span>
+        <div class="nav-link-indicator"></div>
+      </a>
+    </ng-container>
+  </div>
+</nav>
