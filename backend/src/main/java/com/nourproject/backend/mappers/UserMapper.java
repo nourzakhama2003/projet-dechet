@@ -12,14 +12,16 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     User userDtoToUser(UserDto userDto);
-    
+
     UserDto userToUserDto(User user);
-    
+
+    UserUpdateDto userDtoToUserUpdateDto(UserDto userDto);
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
@@ -29,11 +31,8 @@ public interface UserMapper {
     @Mapping(target = "userName", ignore = true)
     @Mapping(target = "faceAuthEnabled", ignore = true)
     void updateUserUpdateDtoToUser(UserUpdateDto userUpdateDto, @MappingTarget User user);
-    
-    /**
-     * Convert UserDto to UserUpdateDto for reusing update logic
-     * This eliminates code duplication in sync operations
-     */
-    UserUpdateDto userDtoToUserUpdateDto(UserDto userDto);
+
+
+
 }
 

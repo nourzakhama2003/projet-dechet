@@ -20,6 +20,7 @@ Backend runs on: http://localhost:8082
 ### 3. Run Frontend Manually
 ```bash
 cd frontend
+npm i --legacy-peer-deps
 npm start
 ```
 Frontend runs on: http://localhost:4200
@@ -54,3 +55,4 @@ PASSWORD=expadmin
 realm import  keycloak
 realm-config-dev.json
 realm-config-prod.json
+https://github.com/nourzakhama2003/projet-dechet.git

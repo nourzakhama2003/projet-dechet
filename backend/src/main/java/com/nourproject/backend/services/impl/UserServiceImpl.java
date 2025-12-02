@@ -1,5 +1,6 @@
 package com.nourproject.backend.services.impl;
 
+import com.mongodb.DuplicateKeyException;
 import com.nourproject.backend.dtos.Response;
 import com.nourproject.backend.dtos.user.UserDto;
 import com.nourproject.backend.dtos.user.UserUpdateDto;
@@ -11,8 +12,6 @@ import com.nourproject.backend.repositories.UserRepository;
 import com.nourproject.backend.services.KeycloakAdminService;
 import com.nourproject.backend.services.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,310 +19,148 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * User Service Implementation
- * 
- * Implements business logic for user management operations.
- * Handles CRUD operations, validation, and data transformation.
- * Synchronizes with Keycloak for authentication management.
- * 
- * @author Senior Developer
- * @version 1.0
- * @since 2025-11-28
- */
 @Service
 @RequiredArgsConstructor
-@Slf4j
-@Transactional
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final UserRepository userRepository;
     private final KeycloakAdminService keycloakAdminService;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = true)
     public Response findAll() {
-        log.info("Fetching all users");
-        try {
-            List<User> users = userRepository.findAll();
-            List<UserDto> userDtos = users.stream()
-                    .map(userMapper::userToUserDto)
-                    .collect(Collectors.toList());
-            
-            log.info("Successfully retrieved {} users", userDtos.size());
-            return Response.builder()
-                    .status(200)
-                    .message("Users retrieved successfully")
-                    .userList(userDtos)
-                    .build();
-        } catch (Exception e) {
-            log.error("Error fetching all users", e);
-            throw new GlobalException("Error retrieving users: " + e.getMessage());
-        }
+        List<UserDto> list = this.userRepository.findAll().stream()
+                .map(userMapper::userToUserDto).toList();
+
+        return Response.builder()
+                .status(200)
+                .message("List of users retrieved successfully")
+                .users(list)
+                .build();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public User getByUserName(String username) {
-        log.info("Fetching user by username: {}", username);
-        return userRepository.findByUserName(username)
-                .orElseThrow(() -> {
-                    log.error("User not found with username: {}", username);
-                    return new NotFoundException("User not found with username: " + username);
-                });
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public User getByEmail(String email) {
-        log.info("Fetching user by email: {}", email);
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> {
-                    log.error("User not found with email: {}", email);
-                    return new NotFoundException("User not found with email: " + email);
-                });
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = true)
     public Response findById(String id) {
-        log.info("Fetching user by ID: {}", id);
-        try {
-            User user = userRepository.findById(id)
-                    .orElseThrow(() -> new NotFoundException("User not found with ID: " + id));
-            
-            UserDto userDto = userMapper.userToUserDto(user);
-            
-            log.info("Successfully retrieved user: {}", user.getUserName());
-            return Response.builder()
-                    .status(200)
-                    .message("User retrieved successfully")
-                    .user(userDto)
-                    .build();
-        } catch (NotFoundException e) {
-            log.error("User not found with ID: {}", id);
-            throw e;
-        } catch (Exception e) {
-            log.error("Error fetching user by ID: {}", id, e);
-            throw new GlobalException("Error retrieving user: " + e.getMessage());
-        }
+        UserDto userDto = this.userRepository.findById(id).map(userMapper::userToUserDto)
+                .orElseThrow(() -> new NotFoundException("User with ID " + id + " not found"));
+        return Response.builder()
+                .status(200)
+                .message("User retrieved successfully")
+                .user(userDto)
+                .build();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Response findByUserName(String username) {
-        log.info("Fetching user by username: {}", username);
-        try {
-            User user = getByUserName(username);
-            UserDto userDto = userMapper.userToUserDto(user);
-            
-            return Response.builder()
-                    .status(200)
-                    .message("User retrieved successfully")
-                    .user(userDto)
-                    .build();
-        } catch (NotFoundException e) {
-            throw e;
-        } catch (Exception e) {
-            log.error("Error fetching user by username: {}", username, e);
-            throw new GlobalException("Error retrieving user: " + e.getMessage());
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Response findByEmail(String email) {
-        log.info("Fetching user by email: {}", email);
-        try {
-            User user = getByEmail(email);
-            UserDto userDto = userMapper.userToUserDto(user);
-            
-            return Response.builder()
-                    .status(200)
-                    .message("User retrieved successfully")
-                    .user(userDto)
-                    .build();
-        } catch (NotFoundException e) {
-            throw e;
-        } catch (Exception e) {
-            log.error("Error fetching user by email: {}", email, e);
-            throw new GlobalException("Error retrieving user: " + e.getMessage());
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Response save(UserDto userDto) {
-        log.info("Creating new user: {}", userDto.getUserName());
-        try {
-            // Validate unique constraints
-            if (userRepository.existsByUserName(userDto.getUserName())) {
-                log.error("Username already exists: {}", userDto.getUserName());
-                throw new GlobalException("Username already exists: " + userDto.getUserName());
-            }
-            
-            if (userRepository.existsByEmail(userDto.getEmail())) {
-                log.error("Email already exists: {}", userDto.getEmail());
-                throw new GlobalException("Email already exists: " + userDto.getEmail());
-            }
-            
-            // Map DTO to entity
-            User user = userMapper.userDtoToUser(userDto);
-            user.setCreatedAt(LocalDateTime.now());
-            
-            // Save user
-            User savedUser = userRepository.save(user);
-            UserDto savedUserDto = userMapper.userToUserDto(savedUser);
-            
-            log.info("Successfully created user: {}", savedUser.getUserName());
-            return Response.builder()
-                    .status(201)
-                    .message("User created successfully")
-                    .user(savedUserDto)
-                    .build();
-        } catch (DuplicateKeyException e) {
-            log.error("Duplicate key error creating user", e);
-            throw new GlobalException("User with this username or email already exists");
-        } catch (Exception e) {
-            log.error("Error creating user: {}", userDto.getUserName(), e);
-            throw new GlobalException("Error creating user: " + e.getMessage());
-        }
+        UserDto user = userMapper.userToUserDto(userRepository.save(this.userMapper.userDtoToUser(userDto)));
+        return Response.builder()
+                .status(200)
+                .message("User saved successfully")
+                .user(user)
+                .build();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Response updateById(String id, UserUpdateDto userUpdateDto) {
-        log.info("Updating user with ID: {}", id);
-        try {
-            User user = userRepository.findById(id)
-                    .orElseThrow(() -> new NotFoundException("User not found with ID: " + id));
-            
-            // Update only non-null fields
-            userMapper.updateUserUpdateDtoToUser(userUpdateDto, user);
-            user.setUpdatedAt(LocalDateTime.now());
-            
-            // Save updated user
-            User updatedUser = userRepository.save(user);
-            UserDto updatedUserDto = userMapper.userToUserDto(updatedUser);
-            
-            log.info("Successfully updated user: {}", updatedUser.getUserName());
-            return Response.builder()
-                    .status(200)
-                    .message("User updated successfully")
-                    .user(updatedUserDto)
-                    .build();
-        } catch (NotFoundException e) {
-            throw e;
-        } catch (Exception e) {
-            log.error("Error updating user with ID: {}", id, e);
-            throw new GlobalException("Error updating user: " + e.getMessage());
-        }
+    public Response findByUserName(String userName) {
+        UserDto userDto = this.userRepository.findByUserName(userName.trim()).map(userMapper::userToUserDto)
+                .orElseThrow(() -> new NotFoundException("User with userName " + userName + " not found"));
+        return Response.builder()
+                .status(200)
+                .message("User retrieved successfully")
+                .user(userDto)
+                .build();
     }
 
-    /**
-     * {@inheritDoc}
-     * Also deletes the user from Keycloak using email as identifier
-     */
-    @Override
-    public Response deleteByUserId(String id) {
-        log.info("Deleting user with ID: {}", id);
-        try {
-            User user = userRepository.findById(id)
-                    .orElseThrow(() -> new NotFoundException("User not found with ID: " + id));
-            
-            String username = user.getUserName();
-            String email = user.getEmail();
-            
-            // Delete from MongoDB first
-            userRepository.deleteById(id);
-            log.info("Successfully deleted user from database: {} ({})", username, email);
-            
-            // Try to delete from Keycloak using email (primary identifier)
-            try {
-                if (email != null && !email.trim().isEmpty()) {
-                    boolean keycloakDeleted = keycloakAdminService.deleteUserByEmail(email);
-                    if (keycloakDeleted) {
-                        log.info("Successfully deleted user from Keycloak by email: {}", email);
-                    } else {
-                        log.warn("Failed to delete user from Keycloak by email: {} - User may not exist in Keycloak", email);
-                    }
-                } else {
-                    log.warn("User has no email, cannot delete from Keycloak: {}", username);
-                }
-            } catch (Exception keycloakError) {
-                log.error("Error deleting user from Keycloak (email: {}): {}", email, keycloakError.getMessage());
-                // Don't fail the entire operation if Keycloak deletion fails
-                // The user is already deleted from database
-            }
-            
-            return Response.builder()
-                    .status(200)
-                    .message("User deleted successfully from database and Keycloak")
-                    .build();
-        } catch (NotFoundException e) {
-            throw e;
-        } catch (Exception e) {
-            log.error("Error deleting user with ID: {}", id, e);
-            throw new GlobalException("Error deleting user: " + e.getMessage());
-        }
+    public User getByUserName(String userName) {
+        return this.userRepository.findByUserName(userName)
+                .orElseThrow(() -> new NotFoundException("User with userName " + userName + " not found"));
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+    public User getByEmail(String email) {
+        return this.userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User with email " + email + " not found"));
+    }
+
+    public Response findByEmail(String email) {
+        UserDto userDto = this.userRepository.findByEmail(email).map(userMapper::userToUserDto)
+                .orElseThrow(() -> new NotFoundException("User with email " + email + " not found"));
+        return Response.builder()
+                .status(200)
+                .message("User retrieved successfully")
+                .user(userDto)
+                .build();
+    }
+
     public Response createOrUpdateUser(UserDto userDto) {
-        log.info("Creating or updating user: {}", userDto.getEmail());
-        try {
-            // Check if user exists by email
-            return userRepository.findByEmail(userDto.getEmail())
-                    .map(existingUser -> {
-                        log.info("User exists, updating: {}", userDto.getEmail());
-                        // User exists, update it
-                        UserUpdateDto updateDto = userMapper.userDtoToUserUpdateDto(userDto);
-                        userMapper.updateUserUpdateDtoToUser(updateDto, existingUser);
-                        existingUser.setUpdatedAt(LocalDateTime.now());
-                        
-                        User updatedUser = userRepository.save(existingUser);
-                        UserDto updatedUserDto = userMapper.userToUserDto(updatedUser);
-                        
-                        return Response.builder()
-                                .status(200)
-                                .message("User synchronized successfully")
-                                .user(updatedUserDto)
-                                .build();
-                    })
-                    .orElseGet(() -> {
-                        log.info("User does not exist, creating: {}", userDto.getEmail());
-                        // User doesn't exist, create new
-                        return save(userDto);
-                    });
-        } catch (Exception e) {
-            log.error("Error in createOrUpdateUser for email: {}", userDto.getEmail(), e);
-            throw new GlobalException("Error synchronizing user: " + e.getMessage());
+        // Use email as primary identifier for finding existing users
+        User existingUser = null;
+
+        // First try to find by email (primary identifier)
+        if (userDto.getEmail() != null && !userDto.getEmail().trim().isEmpty()) {
+            existingUser = this.userRepository.findByEmail(userDto.getEmail()).orElse(null);
         }
+
+        // If not found by email and we have a username, try by username as fallback
+        if (existingUser == null && userDto.getUserName() != null && !userDto.getUserName().trim().isEmpty()) {
+            existingUser = this.userRepository.findByUserName(userDto.getUserName()).orElse(null);
+        }
+
+        if (existingUser != null) {
+            // User exists, update them
+            UserUpdateDto updateDto = userMapper.userDtoToUserUpdateDto(userDto);
+            return updateById(existingUser.getId(), updateDto);
+        } else {
+            // User doesn't exist, create new one
+            return save(userDto);
+        }
+    }
+
+    public Response updateById(String id, UserUpdateDto userUpdateDto) {
+        User user = this.userRepository.findById(id)
+                .orElseThrow(() -> new GlobalException("User with ID " + id + " not found"));
+        this.userMapper.updateUserUpdateDtoToUser(userUpdateDto, user);
+        UserDto updatedUser = this.userMapper.userToUserDto(this.userRepository.save(user));
+
+        keycloakAdminService.updateUserCompleteProfile(
+                updatedUser.getUserName(),
+                updatedUser.getFirstName(),
+                updatedUser.getLastName()
+        );
+
+        return Response.builder()
+                .status(200)
+                .message("User updated successfully")
+                .user(updatedUser)
+                .build();
+    }
+
+    @Transactional
+    public Response deleteByUserId(String id) {
+        User user = this.userRepository.findById(id)
+                .orElseThrow(() -> new GlobalException("User with ID " + id + " not found"));
+
+        // Store user data for response and Keycloak deletion
+        UserDto deletedUserDto = userMapper.userToUserDto(user);
+        String userEmail = user.getEmail();
+        String username = user.getUserName();
+
+        // Delete from local database first
+        this.userRepository.delete(user);
+
+        // Then delete from Keycloak using email
+        try {
+            System.out.println("Attempting to delete user from Keycloak with email: " + userEmail);
+            boolean keycloakDeleteSuccess = keycloakAdminService.deleteUserByEmail(userEmail);
+
+            if (keycloakDeleteSuccess) {
+                System.out.println("Successfully deleted user from both database and Keycloak: " + username);
+            } else {
+                System.err.println("User deleted from database but failed to delete from Keycloak: " + username);
+            }
+        } catch (Exception e) {
+            System.err.println("Error deleting user from Keycloak: " + e.getMessage());
+        }
+
+        return Response.builder()
+                .status(200)
+                .message("User deleted successfully")
+                .user(deletedUserDto)
+                .build();
     }
 }

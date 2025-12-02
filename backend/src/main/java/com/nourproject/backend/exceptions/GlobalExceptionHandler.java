@@ -18,14 +18,7 @@ public class GlobalExceptionHandler {
                 .build();
         return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body(response);
     }
-    @ExceptionHandler(InvalidBookingStateOrDate.class)
-    public ResponseEntity<Response> handleInvalidBookingException(Exception ex) {
-        Response response=Response.builder()
-                .status(HttpStatus.SC_BAD_REQUEST)
-                .message(ex.getMessage())
-                .build();
-        return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(response);
-    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Response> handleMethodArgumentNotValidException(Exception ex) {
         Response response=Response.builder()

@@ -94,10 +94,10 @@ public class UserSyncService implements CommandLineRunner {
                     boolean userSynced = syncSingleUser(keycloakUser);
                     if (userSynced) {
                         syncedCount++;
-                        log.debug("✓ Synced user: {}", keycloakUser.getEmail());
+                        log.debug("✓ Synced/Updated user: {}", keycloakUser.getEmail());
                     } else {
                         skippedCount++;
-                        log.debug("- Skipped user: {} (already exists)", keycloakUser.getEmail());
+                        log.debug("- Skipped user: {} (no changes)", keycloakUser.getEmail());
                     }
                 } catch (Exception e) {
                     errorCount++;
@@ -107,8 +107,8 @@ public class UserSyncService implements CommandLineRunner {
             }
 
             log.info("User sync summary:");
-            log.info("  ✓ Synced: {}", syncedCount);
-            log.info("  - Skipped: {}", skippedCount);
+            log.info("  ✓ Synced/Updated: {}", syncedCount);
+            log.info("  - Skipped (no changes): {}", skippedCount);
             log.info("  ✗ Errors: {}", errorCount);
 
         } catch (Exception e) {
@@ -119,9 +119,10 @@ public class UserSyncService implements CommandLineRunner {
     /**
      * Syncs a single user from Keycloak to the database
      * Uses email as primary identifier (more stable than username)
+     * Updates existing users' roles and status if they've changed in Keycloak
      * 
      * @param keycloakUser the Keycloak user representation
-     * @return true if user was synced/created, false if already exists
+     * @return true if user was synced/created/updated, false if skipped
      */
     private boolean syncSingleUser(UserRepresentation keycloakUser) {
         String email = keycloakUser.getEmail();
@@ -136,12 +137,72 @@ public class UserSyncService implements CommandLineRunner {
         // Try to find by email only
         User existingUser = userRepository.findByEmail(email).orElse(null);
         if (existingUser != null) {
-            log.debug("User already exists with email {}: {}", email, existingUser.getUserName());
-            return false; // User already exists
+            // User exists - update their role and status if changed
+            return updateUserFromKeycloak(existingUser, keycloakUser);
         }
 
         // User doesn't exist, create new user
         return createUserFromKeycloak(keycloakUser);
+    }
+
+    /**
+     * Updates an existing user's information from Keycloak
+     * Updates role, active status, first name, last name
+     * 
+     * @param existingUser the existing user in database
+     * @param keycloakUser the Keycloak user representation
+     * @return true if user was updated
+     */
+    private boolean updateUserFromKeycloak(User existingUser, UserRepresentation keycloakUser) {
+        try {
+            // Extract current role from Keycloak
+            UserRole keycloakRole = extractUserRole(keycloakUser);
+            boolean updated = false;
+
+            // Update role if changed
+            if (existingUser.getRole() != keycloakRole) {
+                log.info("Updating role for user {} from {} to {}", 
+                    existingUser.getEmail(), existingUser.getRole(), keycloakRole);
+                existingUser.setRole(keycloakRole);
+                updated = true;
+            }
+
+            // Update active status if changed
+            if (existingUser.getIsActive() != keycloakUser.isEnabled()) {
+                log.info("Updating active status for user {} from {} to {}", 
+                    existingUser.getEmail(), existingUser.getIsActive(), keycloakUser.isEnabled());
+                existingUser.setIsActive(keycloakUser.isEnabled());
+                updated = true;
+            }
+
+            // Update first name if changed
+            if (keycloakUser.getFirstName() != null && 
+                !keycloakUser.getFirstName().equals(existingUser.getFirstName())) {
+                existingUser.setFirstName(keycloakUser.getFirstName());
+                updated = true;
+            }
+
+            // Update last name if changed
+            if (keycloakUser.getLastName() != null && 
+                !keycloakUser.getLastName().equals(existingUser.getLastName())) {
+                existingUser.setLastName(keycloakUser.getLastName());
+                updated = true;
+            }
+
+            if (updated) {
+                userRepository.save(existingUser);
+                log.info("Updated user from Keycloak - Email: {}, Role: {}", 
+                    existingUser.getEmail(), keycloakRole);
+                return true;
+            } else {
+                log.debug("No changes for user {}", existingUser.getEmail());
+                return false;
+            }
+
+        } catch (Exception e) {
+            log.error("Failed to update user from Keycloak data: {}", e.getMessage(), e);
+            return false;
+        }
     }
 
     /**
@@ -207,10 +268,15 @@ public class UserSyncService implements CommandLineRunner {
             // Get user roles from Keycloak using the admin service
             List<String> userRoles = keycloakAdminService.getUserRealmRoles(keycloakUser.getId());
             
-            // Check if user has admin role
+            // Check roles in priority order (Admin > Employe > User)
             if (userRoles.contains("admin")) {
                 log.debug("User {} has admin role", keycloakUser.getEmail());
                 return UserRole.Admin;
+            }
+            
+            if (userRoles.contains("employe")) {
+                log.debug("User {} has employe role", keycloakUser.getEmail());
+                return UserRole.Employe;
             }
             
             // Default to User role

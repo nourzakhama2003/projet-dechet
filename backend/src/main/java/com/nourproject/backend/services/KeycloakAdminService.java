@@ -105,6 +105,30 @@ public class KeycloakAdminService {
     }
 
     /**
+     * Find a user by email address
+     * 
+     * @param email the email address
+     * @return UserRepresentation or null if not found
+     */
+    public UserRepresentation findUserByEmail(String email) {
+        try {
+            UsersResource usersResource = realmResource.users();
+            List<UserRepresentation> users = usersResource.searchByEmail(email, true);
+            
+            if (users.isEmpty()) {
+                log.warn("User not found in Keycloak with email: {}", email);
+                return null;
+            }
+            
+            return users.get(0);
+            
+        } catch (Exception e) {
+            log.error("Failed to find user by email in Keycloak: {}", email, e);
+            return null;
+        }
+    }
+
+    /**
      * Delete a user from Keycloak by email address
      * 
      * @param email the email address

@@ -1,9 +1,11 @@
-package com.nourproject.backend.dtos.user;
+package com.nourproject.backend.dtos.vehicule;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.nourproject.backend.enums.VehiculeType;
+import com.nourproject.backend.entities.User;
 import com.nourproject.backend.enums.UserRole;
+import com.nourproject.backend.enums.VehiculeStatus;
+import com.nourproject.backend.enums.VehiculeType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,11 +19,12 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = false)
 @Builder
-public class UserUpdateDto {
-    private String firstName;
-    private String lastName;
-    private String profileImage;
-    private UserRole role;
-    private List<VehiculeType> vehicules ;
-    private Boolean driver ;
+public class VehiculeUpdateDto {
+
+    private String matricul;
+    private double capacity;
+    private VehiculeStatus vehiculeStatus;
+    private VehiculeType vehiculeType;
+    List<User> users;
+
 }

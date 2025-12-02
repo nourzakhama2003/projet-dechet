@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import com.nourproject.backend.dtos.user.UserDto;
+import com.nourproject.backend.dtos.vehicule.VehiculeDto;
+import com.nourproject.backend.entities.Incident;
+import com.nourproject.backend.entities.Route;
+import com.nourproject.backend.entities.Vehicule;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,12 +26,25 @@ public class Response {
     //generic
     private int status;
     private String message;
-   
+
 
 
     //user data output
     private UserDto user;
-    private List<UserDto> userList;
+    private List<UserDto> users;
+
+  private VehiculeDto vehicule;
+   private List<VehiculeDto> vehicules;
+//
+//    private Incident incident;
+//    private List<Incident> incidents;
+//
+//    private Route route;
+//    private List<Route> routes;
+//
+
+
+
 
 
     //Payment data output
