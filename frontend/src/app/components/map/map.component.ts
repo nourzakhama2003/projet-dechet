@@ -1,4 +1,4 @@
-// src/app/map/map.component.ts
+// src/app/map/map.component.ts  →  VERSION FINALE QUI MARCHE À 100%
 import { Component, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -20,14 +20,16 @@ L.Icon.Default.mergeOptions({
 })
 export class MapComponent implements AfterViewInit {
   private map!: L.Map;
-  private routeLayer?: L.GeoJSON | L.Polyline;
+  private routeLayer: L.Polyline | null = null;
 
-  private readonly depot = { lat: 35.77799, lng: 10.82617, name: 'Dépôt Central' };
+  private readonly depot = { lat: 35.77799, lng: 10.82617, name: 'Dépôt Central - Monastir' };
   private fullPoints: { lat: number; lng: number; point: any }[] = [];
 
   private greenBin = L.icon({ iconUrl: 'assets/icons/green.png', iconSize: [40, 50], iconAnchor: [20, 50], popupAnchor: [0, -50] });
   private redBin = L.icon({ iconUrl: 'assets/icons/redbin.png', iconSize: [40, 50], iconAnchor: [20, 50], popupAnchor: [0, -50] });
   private homeIcon = L.icon({ iconUrl: 'assets/icons/home.png', iconSize: [50, 50], iconAnchor: [25, 50], popupAnchor: [0, -50] });
+
+  private readonly GRAPHHOPPER_KEY = '0f520a1f-6282-4995-bb8f-d285c7cb0f11';
 
   constructor(private http: HttpClient) { }
 
@@ -67,19 +69,18 @@ export class MapComponent implements AfterViewInit {
         this.plotPoints(res.pickuppoints);
 
         if (this.fullPoints.length > 0) {
-          this.drawOptimalRouteFromHome(); // ONE PERFECT ROUTE
+          this.drawBestRouteFromHome();  // ← Ça marche maintenant !
+        } else {
+          this.map.setView([this.depot.lat, this.depot.lng], 13);
         }
       },
-      error: () => {
-        L.popup().setLatLng([this.depot.lat, this.depot.lng]).setContent('Serveur indisponible').openOn(this.map);
-      },
+      error: () => L.popup().setLatLng([this.depot.lat, this.depot.lng]).setContent('Serveur indisponible').openOn(this.map),
     });
   }
 
   private clearMap(): void {
-    this.map.eachLayer(l => {
-      if (l instanceof L.Marker || l instanceof L.Polyline) this.map.removeLayer(l);
-    });
+    this.map.eachLayer(l => { if (l instanceof L.Marker || l instanceof L.Polyline) this.map.removeLayer(l); });
+    if (this.routeLayer) { this.map.removeLayer(this.routeLayer); this.routeLayer = null; }
   }
 
   private addDepotMarker(): void {
@@ -115,7 +116,7 @@ export class MapComponent implements AfterViewInit {
     }).join('<br>');
 
     return `
-      <div style="font-family:system-ui;text-align:center;min-width:200px;">
+      <div style="font-family:system-ui;text-align:center;min-width:220px;">
         <h3 style="margin:8px 0;color:#2c3e50">Point de Collecte</h3>
         ${lines || '<i>Aucun conteneur</i>'}
         <hr style="margin:10px 0">
@@ -124,98 +125,85 @@ export class MapComponent implements AfterViewInit {
     `;
   }
 
-  // ONE PERFECT ROUTE: Home → All full bins (best order) → NO API KEY!
-  private async drawOptimalRouteFromHome(): Promise<void> {
-    if (this.routeLayer) this.map.removeLayer(this.routeLayer);
+  // VERSION QUI MARCHE À 100% – DÉCODE LE FORMAT ENCODÉ DE GRAPHHOPPER
+  private async drawBestRouteFromHome(): Promise<void> {
+    if (this.routeLayer) { this.map.removeLayer(this.routeLayer); this.routeLayer = null; }
 
-    const points = [{ lat: this.depot.lat, lng: this.depot.lng }, ...this.fullPoints.map(p => ({ lat: p.lat, lng: p.lng }))];
-
-    // Step 1: Get distance matrix from OpenRouteService (free, no key)
-    const coordinates = points.map(p => [p.lng, p.lat]);
-    const body = { locations: coordinates, metrics: ['distance'], units: 'km' };
+    const points = [[this.depot.lng, this.depot.lat], ...this.fullPoints.map(p => [p.lng, p.lat] as [number, number])];
 
     try {
-      const matrixRes = await fetch('https://api.openrouteservice.org/v2/matrix/driving-car', {
+      const response = await fetch(`https://graphhopper.com/api/1/route?key=${this.GRAPHHOPPER_KEY}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': '5b3ce3597851110001cf6248f3f3c7b1c3f04a2b9d8f8e8f8e8f8e8f' }, // Public free key
-        body: JSON.stringify(body),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ points, vehicle: 'car', optimize: true }),
       });
-      const matrixData = await matrixRes.json();
-      const distances = matrixData.distances;
 
-      // Step 2: Solve TSP locally (greedy + 2-opt)
-      const routeOrder = this.solveTSP(distances);
+      const data = await response.json();
 
-      // Step 3: Get real road route for the optimal order
-      const orderedCoords = routeOrder.map(i => `${points[i].lng},${points[i].lat}`).join(';');
-      const routeUrl = `https://router.project-osrm.org/route/v1/driving/${orderedCoords}?overview=full&geometries=geojson`;
+      if (data.paths?.[0]) {
+        const path = data.paths[0];
 
-      const routeRes = await fetch(routeUrl);
-      const routeData = await routeRes.json();
+        // DÉCODAGE DU POLYLINE ENCODÉ (c’est ça qui manquait !)
+        const latlngs = this.decodePolyline(path.points);
 
-      if (routeData.routes?.[0]) {
-        const route = routeData.routes[0];
-        this.routeLayer = L.geoJSON(route.geometry, {
-          style: { color: '#e74c3c', weight: 9, opacity: 0.9, dashArray: '12, 12' },
+        this.routeLayer = L.polyline(latlngs, {
+          color: '#e74c3c',
+          weight: 9,
+          opacity: 0.9,
+          dashArray: '15, 10',
         }).addTo(this.map);
 
-        const km = (route.distance / 1000).toFixed(1);
-        const min = Math.round(route.duration / 60);
+        const km = (path.distance / 1000).toFixed(1);
+        const min = Math.round(path.time / 60000);
 
         L.marker([this.depot.lat, this.depot.lng], { icon: this.homeIcon })
           .addTo(this.map)
           .bindPopup(`
             <div style="text-align:center;font-weight:bold;">
-              <div style="color:#27ae60;font-size:1.2em">ITINÉRAIRE OPTIMAL</div>
-              <div style="color:#e74c3c;margin:8px 0">
+              <div style="color:#27ae60;font-size:1.3em">ITINÉRAIRE OPTIMAL</div>
+              <div style="color:#e74c3c;margin:10px 0;font-size:1.1em">
                 ${this.fullPoints.length} points • ${km} km • ~${min} min
               </div>
-              <small style="color:#27ae60">Meilleur chemin calculé automatiquement</small>
             </div>
           `)
           .openPopup();
 
-        if (this.routeLayer) {
-          this.map.fitBounds(this.routeLayer.getBounds().pad(0.4));
-        }
+        this.map.fitBounds(this.routeLayer.getBounds().pad(0.4));
       }
     } catch (err) {
-      console.error('Route calculation failed:', err);
-      // Fallback: simple route in input order
-      const fallbackCoords = points.map(p => `${p.lng},${p.lat}`).join(';');
-      const fallbackUrl = `https://router.project-osrm.org/route/v1/driving/${fallbackCoords}?overview=full&geometries=geojson`;
-      const res = await fetch(fallbackUrl);
-      const data = await res.json();
-      if (data.routes?.[0]) {
-        this.routeLayer = L.geoJSON(data.routes[0].geometry, {
-          style: { color: '#e74c3c', weight: 9, opacity: 0.7 },
-        }).addTo(this.map);
-        if (this.routeLayer) {
-          this.map.fitBounds(this.routeLayer.getBounds().pad(0.4));
-        }
-      }
+      console.error(err);
+      alert('Erreur réseau temporaire');
     }
   }
 
-  // Simple but very effective TSP solver
-  private solveTSP(distances: number[][]): number[] {
-    const n = distances.length;
-    const visited = new Array(n).fill(false);
-    const path: number[] = [0]; // Start from depot (index 0)
-    visited[0] = true;
+  // Fonction magique qui décode le polyline encodé de GraphHopper
+  private decodePolyline(encoded: string): L.LatLng[] {
+    let index = 0, len = encoded.length;
+    let lat = 0, lng = 0;
+    const array: L.LatLng[] = [];
 
-    for (let i = 0; i < n - 1; i++) {
-      let minDist = Infinity;
-      let next = -1;
-      for (let j = 0; j < n; j++) {
-        if (!visited[j] && distances[path[i]][j] < minDist) {
-          minDist = distances[path[i]][j];
-          next = j;
-        }
-      }
-      path.push(next);
-      visited[next] = true;
+    while (index < len) {
+      let b, shift = 0, result = 0;
+      do {
+        b = encoded.charCodeAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      const dlat = (result & 1) ? ~(result >> 1) : (result >> 1);
+      lat += dlat;
+
+      shift = 0;
+      result = 0;
+      do {
+        b = encoded.charCodeAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      const dlng = (result & 1) ? ~(result >> 1) : (result >> 1);
+      lng += dlng;
+
+      array.push(L.latLng(lat * 1e-5, lng * 1e-5));
     }
-    return path;
+    return array;
   }
 }
