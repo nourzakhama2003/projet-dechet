@@ -51,7 +51,7 @@ USERNAME=exproot
 PASSWORD=expadmin
 
 
-
+cd frontend; Remove-Item -Recurse -Force .angular -ErrorAction SilentlyContinue ; 
 realm import  keycloak
 realm-config-dev.json
 realm-config-prod.json
