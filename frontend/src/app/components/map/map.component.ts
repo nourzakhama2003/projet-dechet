@@ -50,7 +50,6 @@ export class MapComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.initMap();
     this.loadPickupPoints();
-    setInterval(() => this.loadPickupPoints(), 30000);
   }
 
   private initMap(): void {
@@ -217,7 +216,7 @@ export class MapComponent implements AfterViewInit {
             // 200 means duplicate found
             this.isDuplicateRoute = true;
             this.duplicateCheckLoading = false;
-            this.toastService.showWarning('Warning: A route with these pickup points already exists!', 'warning');
+            this.toastService.showInfo('A route with these pickup points already exists!', 'Route Exists');
           },
           error: (err) => {
             // 404 means not found (no duplicate), which is good
