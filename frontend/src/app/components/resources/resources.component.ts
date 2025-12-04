@@ -22,7 +22,7 @@ export class ResourcesComponent implements OnInit {
   @ViewChild(MapComponent) mapComponent!: MapComponent;
 
   activeTab: 'users' | 'containers' | 'pickuppoints' | 'vehicles' | 'incidents' | 'notifications' | 'routes' = 'users';
-
+sidebarOpen: boolean = true;
   users: any[] = [];
   containers: any[] = [];
   pickupPoints: any[] = [];
@@ -186,5 +186,8 @@ export class ResourcesComponent implements OnInit {
   // Check if map has optimized route ready
   hasOptimizedRoute(): boolean {
     return this.mapComponent?.hasOptimizedRoute() || false;
+  }
+  show(){
+    this.sidebarOpen = !this.sidebarOpen;
   }
 }

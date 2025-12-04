@@ -1,5 +1,6 @@
 <div class="flex h-screen bg-gray-50 font-sans overflow-hidden">
   <!-- Sidebar -->
+  @if(sidebarOpen) {
   <aside
     class="w-64 bg-white border-r border-gray-200 flex flex-col shadow-sm z-10"
   >
@@ -205,8 +206,9 @@
           <p class="text-xs text-gray-500">admin@example.com</p>
         </div>
       </div>
+
     </div>
-  </aside>
+  </aside>}
 
   <!-- Main Content -->
   <main class="flex-1 overflow-y-auto bg-gray-50 p-8">
@@ -226,7 +228,7 @@
         <p class="text-gray-500 mt-1">Manage your resources efficiently.</p>
       </div>
       <!-- Add Action Button (Optional) -->
-      <button
+       <div class="flex justify-between gap-6">    <button
         *ngIf="activeTab !== 'pickuppoints' && activeTab !== 'routes'"
         class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg shadow-md transition-colors duration-200 flex items-center"
       >
@@ -246,6 +248,18 @@
         </svg>
         Add New
       </button>
+   <button class="p-3 m-2 rounded-full border border-black bg-slate-50" (click)="show()">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+       viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+       class="lucide lucide-eye">
+    <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/>
+    <circle cx="12" cy="12" r="3"/>
+  </svg>
+</button>
+</div>
+  
+
     </header>
 
     <!-- Loading State -->
