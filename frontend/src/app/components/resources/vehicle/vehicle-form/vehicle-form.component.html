@@ -63,7 +63,13 @@
           <select id="type" formControlName="type" class="form-select">
             <option value="" disabled>Select type</option>
             <option *ngFor="let type of vehicleTypes" [value]="type">
-              {{ type === 'TRUCK' ? '🚛 Truck' : type === 'VAN' ? '🚐 Van' : '🗜️ Compactor' }}
+              {{
+                type === "TRUCK"
+                  ? "🚛 Truck"
+                  : type === "VAN"
+                  ? "🚐 Van"
+                  : "🗜️ Compactor"
+              }}
             </option>
           </select>
         </div>
@@ -82,28 +88,66 @@
         <label for="status" class="form-label"
           >Status <span class="required">*</span></label
         >
-        <div class="select-wrapper">
-          <select
-            id="status"
-            formControlName="status"
-            class="form-select"
+        <div class="custom-select-wrapper">
+          <div
+            class="custom-select-box"
+            [class.active]="showStatusDropdown"
+            (click)="toggleStatusDropdown()"
           >
-            <option value="" disabled>Select status</option>
-            <option *ngFor="let status of vehicleStatuses" [value]="status">
-              {{ 
-                status === 'AVAILABLE' ? '✅ Available' : 
-                status === 'IN_USE' ? '🚀 In Use' : 
-                status === 'MAINTENANCE' ? '🔧 Maintenance' : 
-                '⛔ Out of Service' 
-              }}
-            </option>
-          </select>
+            <span
+              class="custom-select-text"
+              [class.placeholder]="!selectedStatusName"
+            >
+              {{ selectedStatusName || "Select status" }}
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="dropdown-arrow"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2.5"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
+
+          <div class="custom-dropdown" *ngIf="showStatusDropdown">
+            <div class="custom-dropdown-container">
+              <div
+                *ngFor="let status of vehicleStatuses"
+                class="custom-option"
+                [class.selected]="formGroup.get('status')?.value === status"
+                (click)="selectStatus(status)"
+              >
+                <span>{{ getVehicleStatusDisplay(status) }}</span>
+                <svg
+                  *ngIf="formGroup.get('status')?.value === status"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="check-icon"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
         <div
           class="error-message"
           *ngIf="
-            formGroup.get('status')?.invalid &&
-            formGroup.get('status')?.touched
+            formGroup.get('status')?.invalid && formGroup.get('status')?.touched
           "
         >
           Status is required
@@ -162,7 +206,9 @@
       [disabled]="formGroup.invalid || isLoading"
       (click)="onSubmit()"
     >
-      {{ isLoading ? "Saving..." : editMode ? "Update Vehicle" : "Create Vehicle" }}
+      {{
+        isLoading ? "Saving..." : editMode ? "Update Vehicle" : "Create Vehicle"
+      }}
     </button>
     <button type="button" class="btn-cancel" (click)="onCancel()">
       Cancel

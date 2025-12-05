@@ -54,6 +54,120 @@
         </div>
       </div>
 
+      <!-- Quick Location Picker - Custom Styled -->
+      <div class="form-group">
+        <label class="form-label">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="inline-block h-4 w-4 mr-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+          </svg>
+          Quick Location Picker
+        </label>
+
+        <div class="location-picker-wrapper">
+          <div
+            class="location-search-box"
+            [class.active]="showLocationDropdown"
+            (click)="toggleLocationDropdown()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="location-icon"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+            <span
+              class="selected-location"
+              [class.placeholder]="
+                !selectedLocationName ||
+                selectedLocationName === 'Select a location...'
+              "
+            >
+              {{ selectedLocationName || "Select a location..." }}
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="dropdown-arrow"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2.5"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
+
+          <div class="location-dropdown" *ngIf="showLocationDropdown">
+            <div class="location-options-container">
+              <div
+                *ngFor="let location of predefinedLocations; let i = index"
+                class="location-option"
+                [class.disabled]="i === 0"
+                [class.selected]="
+                  selectedLocationName === location.name && i !== 0
+                "
+                (click)="selectLocation(location, i)"
+              >
+                <span>{{ location.name }}</span>
+                <svg
+                  *ngIf="selectedLocationName === location.name && i !== 0"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="check-icon"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="help-text" style="margin-top: 0.5rem">
+          Select a location to automatically fill coordinates and address
+        </p>
+      </div>
+
       <!-- Coordinates Row -->
       <div style="display: flex; gap: 1.5rem">
         <div class="form-group" style="flex: 1">

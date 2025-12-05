@@ -29,6 +29,12 @@ export class ContainerFormComponent implements OnInit {
   containerStatus: string[] = [ContainerStatus.functional, ContainerStatus.non_functional];
   editMode: boolean = false;
   formGroup!: FormGroup;
+
+  // Custom dropdown states
+  showTypeDropdown: boolean = false;
+  showStatusDropdown: boolean = false;
+  selectedTypeName: string = '';
+  selectedStatusName: string = '';
   constructor(private matDialogRef: MatDialogRef<ContainerFormComponent>, @Inject(MAT_DIALOG_DATA) public data: Partial<Container>, private formBuilder: FormBuilder, private pickUpPointService: PickUpPointService, private toastService: ToastService) { }
 
   ngOnInit(): void {
@@ -38,6 +44,12 @@ export class ContainerFormComponent implements OnInit {
     this.editMode = !!this.data.id;
     if (this.editMode) {
       this.id = this.data.id!;
+      if (this.data.containerType) {
+        this.selectedTypeName = this.data.containerType === 'carton' ? '📦 Carton' : '🧴 Plastique';
+      }
+      if (this.data.containerStatus) {
+        this.selectedStatusName = this.data.containerStatus === 'functional' ? '✅ Functional' : '⚠️ Non-Functional';
+      }
     }
     this.formGroup = this.formBuilder.group({
       containerType: [this.data.containerType || '', Validators.required],
@@ -70,5 +82,28 @@ export class ContainerFormComponent implements OnInit {
   }
   onCancel() {
     this.matDialogRef.close(null);
+  }
+
+  // Custom dropdown methods
+  toggleTypeDropdown() {
+    this.showTypeDropdown = !this.showTypeDropdown;
+    if (this.showTypeDropdown) this.showStatusDropdown = false;
+  }
+
+  toggleStatusDropdown() {
+    this.showStatusDropdown = !this.showStatusDropdown;
+    if (this.showStatusDropdown) this.showTypeDropdown = false;
+  }
+
+  selectType(type: string) {
+    this.selectedTypeName = type === 'carton' ? '📦 Carton' : '🧴 Plastique';
+    this.formGroup.patchValue({ containerType: type });
+    this.showTypeDropdown = false;
+  }
+
+  selectStatus(status: string) {
+    this.selectedStatusName = status === 'functional' ? '✅ Functional' : '⚠️ Non-Functional';
+    this.formGroup.patchValue({ containerStatus: status });
+    this.showStatusDropdown = false;
   }
 }

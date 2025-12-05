@@ -25,6 +25,16 @@ export class IncidentFormComponent implements OnInit {
     pickUpPoints: any[] = [];
     users: any[] = [];
 
+    // Custom dropdown states
+    showStatusDropdown: boolean = false;
+    showPriorityDropdown: boolean = false;
+    showCitizenDropdown: boolean = false;
+    showPickupPointDropdown: boolean = false;
+    selectedStatusName: string = '';
+    selectedPriorityName: string = '';
+    selectedCitizenName: string = '';
+    selectedPickupPointName: string = '';
+
     constructor(
         private formBuilder: FormBuilder,
         private matDialogRef: MatDialogRef<IncidentFormComponent>,
@@ -44,6 +54,12 @@ export class IncidentFormComponent implements OnInit {
         this.editMode = !!this.data.id;
         if (this.editMode) {
             this.id = this.data.id!;
+            if (this.data.status) {
+                this.selectedStatusName = this.data.status.charAt(0).toUpperCase() + this.data.status.slice(1).replace('_', ' ');
+            }
+            if (this.data.priority) {
+                this.selectedPriorityName = this.data.priority.charAt(0).toUpperCase() + this.data.priority.slice(1);
+            }
         }
         this.formGroup = this.formBuilder.group({
             description: [this.data.description || '', [Validators.required, Validators.minLength(10)]],
@@ -99,5 +115,66 @@ export class IncidentFormComponent implements OnInit {
 
     onCancel() {
         this.matDialogRef.close();
+    }
+
+    // Custom dropdown methods
+    toggleStatusDropdown() {
+        this.showStatusDropdown = !this.showStatusDropdown;
+        if (this.showStatusDropdown) {
+            this.showPriorityDropdown = false;
+            this.showCitizenDropdown = false;
+            this.showPickupPointDropdown = false;
+        }
+    }
+
+    togglePriorityDropdown() {
+        this.showPriorityDropdown = !this.showPriorityDropdown;
+        if (this.showPriorityDropdown) {
+            this.showStatusDropdown = false;
+            this.showCitizenDropdown = false;
+            this.showPickupPointDropdown = false;
+        }
+    }
+
+    toggleCitizenDropdown() {
+        this.showCitizenDropdown = !this.showCitizenDropdown;
+        if (this.showCitizenDropdown) {
+            this.showStatusDropdown = false;
+            this.showPriorityDropdown = false;
+            this.showPickupPointDropdown = false;
+        }
+    }
+
+    togglePickupPointDropdown() {
+        this.showPickupPointDropdown = !this.showPickupPointDropdown;
+        if (this.showPickupPointDropdown) {
+            this.showStatusDropdown = false;
+            this.showPriorityDropdown = false;
+            this.showCitizenDropdown = false;
+        }
+    }
+
+    selectStatus(status: string) {
+        this.selectedStatusName = status.charAt(0).toUpperCase() + status.slice(1).replace('_', ' ');
+        this.formGroup.patchValue({ status });
+        this.showStatusDropdown = false;
+    }
+
+    selectPriority(priority: string) {
+        this.selectedPriorityName = priority.charAt(0).toUpperCase() + priority.slice(1);
+        this.formGroup.patchValue({ priority });
+        this.showPriorityDropdown = false;
+    }
+
+    selectCitizen(user: any) {
+        this.selectedCitizenName = `${user.userName} (${user.email})`;
+        this.formGroup.patchValue({ citizenId: user.id });
+        this.showCitizenDropdown = false;
+    }
+
+    selectPickupPoint(point: any) {
+        this.selectedPickupPointName = point.address || `Pickup Point #${point.id?.substring(0, 8)}`;
+        this.formGroup.patchValue({ pickUpPointId: point.id });
+        this.showPickupPointDropdown = false;
     }
 }

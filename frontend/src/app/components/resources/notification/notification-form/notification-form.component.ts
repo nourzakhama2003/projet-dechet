@@ -26,6 +26,16 @@ export class NotificationFormComponent implements OnInit {
     containers: any[] = [];
     incidents: any[] = [];
 
+    // Custom dropdown states
+    showTypeDropdown: boolean = false;
+    showUserDropdown: boolean = false;
+    showContainerDropdown: boolean = false;
+    showIncidentDropdown: boolean = false;
+    selectedTypeName: string = '';
+    selectedUserName: string = '';
+    selectedContainerName: string = '';
+    selectedIncidentName: string = '';
+
     constructor(
         private formBuilder: FormBuilder,
         private matDialogRef: MatDialogRef<NotificationFormComponent>,
@@ -47,6 +57,9 @@ export class NotificationFormComponent implements OnInit {
         this.editMode = !!this.data.id;
         if (this.editMode) {
             this.id = this.data.id!;
+            if (this.data.notificationType) {
+                this.selectedTypeName = this.data.notificationType === 'incident_notification' ? 'Incident Notification' : 'Capacity Notification';
+            }
         }
         this.formGroup = this.formBuilder.group({
             subject: [this.data.subject || '', [Validators.required, Validators.minLength(5)]],
@@ -103,5 +116,66 @@ export class NotificationFormComponent implements OnInit {
 
     onCancel() {
         this.matDialogRef.close();
+    }
+
+    // Custom dropdown methods
+    toggleTypeDropdown() {
+        this.showTypeDropdown = !this.showTypeDropdown;
+        if (this.showTypeDropdown) {
+            this.showUserDropdown = false;
+            this.showContainerDropdown = false;
+            this.showIncidentDropdown = false;
+        }
+    }
+
+    toggleUserDropdown() {
+        this.showUserDropdown = !this.showUserDropdown;
+        if (this.showUserDropdown) {
+            this.showTypeDropdown = false;
+            this.showContainerDropdown = false;
+            this.showIncidentDropdown = false;
+        }
+    }
+
+    toggleContainerDropdown() {
+        this.showContainerDropdown = !this.showContainerDropdown;
+        if (this.showContainerDropdown) {
+            this.showTypeDropdown = false;
+            this.showUserDropdown = false;
+            this.showIncidentDropdown = false;
+        }
+    }
+
+    toggleIncidentDropdown() {
+        this.showIncidentDropdown = !this.showIncidentDropdown;
+        if (this.showIncidentDropdown) {
+            this.showTypeDropdown = false;
+            this.showUserDropdown = false;
+            this.showContainerDropdown = false;
+        }
+    }
+
+    selectType(type: string) {
+        this.selectedTypeName = type === 'incident_notification' ? 'Incident Notification' : 'Capacity Notification';
+        this.formGroup.patchValue({ notificationType: type });
+        this.showTypeDropdown = false;
+    }
+
+    selectUser(user: any) {
+        this.selectedUserName = user.userName;
+        this.formGroup.patchValue({ userId: user.id });
+        this.showUserDropdown = false;
+    }
+
+    selectContainer(container: any) {
+        this.selectedContainerName = `Container #${container.id?.substring(0, 8)}`;
+        this.formGroup.patchValue({ containerId: container.id });
+        this.showContainerDropdown = false;
+    }
+
+    selectIncident(incident: any) {
+        this.selectedIncidentName = incident.description?.substring(0, 50) + '...';
+        this.formGroup.patchValue({ incidentId: incident.id });
+        this.showIncidentDropdown = false;
     }
 }

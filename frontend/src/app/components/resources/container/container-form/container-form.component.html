@@ -34,13 +34,65 @@
         <label for="type" class="form-label"
           >Container Type <span class="required">*</span></label
         >
-        <div class="input-wrapper">
-          <select id="type" formControlName="containerType" class="form-input">
-            <option value="" disabled>Select type</option>
-            <option *ngFor="let type of containerTypes" [value]="type">
-              {{ type === "carton" ? "📦 Carton" : "🧴 Plastique" }}
-            </option>
-          </select>
+        <div class="custom-select-wrapper">
+          <div
+            class="custom-select-box"
+            [class.active]="showTypeDropdown"
+            (click)="toggleTypeDropdown()"
+          >
+            <span
+              class="custom-select-text"
+              [class.placeholder]="!selectedTypeName"
+            >
+              {{ selectedTypeName || "Select type" }}
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="dropdown-arrow"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2.5"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
+
+          <div class="custom-dropdown" *ngIf="showTypeDropdown">
+            <div class="custom-dropdown-container">
+              <div
+                *ngFor="let type of containerTypes"
+                class="custom-option"
+                [class.selected]="
+                  formGroup.get('containerType')?.value === type
+                "
+                (click)="selectType(type)"
+              >
+                <span>{{
+                  type === "carton" ? "📦 Carton" : "🧴 Plastique"
+                }}</span>
+                <svg
+                  *ngIf="formGroup.get('containerType')?.value === type"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="check-icon"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
         <div
           class="error-message"
@@ -58,19 +110,67 @@
         <label for="containerStatus" class="form-label"
           >Status <span class="required">*</span></label
         >
-        <div class="input-wrapper">
-          <select
-            id="containerStatus"
-            formControlName="containerStatus"
-            class="form-input"
+        <div class="custom-select-wrapper">
+          <div
+            class="custom-select-box"
+            [class.active]="showStatusDropdown"
+            (click)="toggleStatusDropdown()"
           >
-            <option value="" disabled>Select status</option>
-            <option *ngFor="let status of containerStatus" [value]="status">
-              {{
-                status === "functional" ? "✅ Functional" : "⚠️ Non-Functional"
-              }}
-            </option>
-          </select>
+            <span
+              class="custom-select-text"
+              [class.placeholder]="!selectedStatusName"
+            >
+              {{ selectedStatusName || "Select status" }}
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="dropdown-arrow"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2.5"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
+
+          <div class="custom-dropdown" *ngIf="showStatusDropdown">
+            <div class="custom-dropdown-container">
+              <div
+                *ngFor="let status of containerStatus"
+                class="custom-option"
+                [class.selected]="
+                  formGroup.get('containerStatus')?.value === status
+                "
+                (click)="selectStatus(status)"
+              >
+                <span>{{
+                  status === "functional"
+                    ? "✅ Functional"
+                    : "⚠️ Non-Functional"
+                }}</span>
+                <svg
+                  *ngIf="formGroup.get('containerStatus')?.value === status"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="check-icon"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="3"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
         <div
           class="error-message"

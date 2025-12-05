@@ -20,6 +20,12 @@ export class VehicleFormComponent implements OnInit {
     vehicleTypes = ['TRUCK', 'VAN', 'COMPACTOR'];
     vehicleStatuses = ['AVAILABLE', 'IN_USE', 'MAINTENANCE', 'OUT_OF_SERVICE'];
 
+    // Custom dropdown states
+    showTypeDropdown: boolean = false;
+    showStatusDropdown: boolean = false;
+    selectedTypeName: string = '';
+    selectedStatusName: string = '';
+
     constructor(
         private formBuilder: FormBuilder,
         private matDialogRef: MatDialogRef<VehicleFormComponent>,
@@ -35,6 +41,12 @@ export class VehicleFormComponent implements OnInit {
         this.editMode = !!this.data.id;
         if (this.editMode) {
             this.id = this.data.id!;
+            if (this.data.type) {
+                this.selectedTypeName = this.getVehicleTypeDisplay(this.data.type);
+            }
+            if (this.data.status) {
+                this.selectedStatusName = this.getVehicleStatusDisplay(this.data.status);
+            }
         }
         this.formGroup = this.formBuilder.group({
             matricul: [this.data.matricul || '', [Validators.required, Validators.minLength(3)]],
@@ -67,5 +79,47 @@ export class VehicleFormComponent implements OnInit {
 
     onCancel() {
         this.matDialogRef.close();
+    }
+
+    // Custom dropdown methods
+    toggleTypeDropdown() {
+        this.showTypeDropdown = !this.showTypeDropdown;
+        if (this.showTypeDropdown) this.showStatusDropdown = false;
+    }
+
+    toggleStatusDropdown() {
+        this.showStatusDropdown = !this.showStatusDropdown;
+        if (this.showStatusDropdown) this.showTypeDropdown = false;
+    }
+
+    selectType(type: string) {
+        this.selectedTypeName = this.getVehicleTypeDisplay(type);
+        this.formGroup.patchValue({ type });
+        this.showTypeDropdown = false;
+    }
+
+    selectStatus(status: string) {
+        this.selectedStatusName = this.getVehicleStatusDisplay(status);
+        this.formGroup.patchValue({ status });
+        this.showStatusDropdown = false;
+    }
+
+    getVehicleTypeDisplay(type: string): string {
+        const typeMap: { [key: string]: string } = {
+            'TRUCK': '🚛 Truck',
+            'VAN': '🚐 Van',
+            'COMPACTOR': '🗆️ Compactor'
+        };
+        return typeMap[type] || type;
+    }
+
+    getVehicleStatusDisplay(status: string): string {
+        const statusMap: { [key: string]: string } = {
+            'AVAILABLE': '✅ Available',
+            'IN_USE': '🚀 In Use',
+            'MAINTENANCE': '🔧 Maintenance',
+            'OUT_OF_SERVICE': '⛔ Out of Service'
+        };
+        return statusMap[status] || status;
     }
 }

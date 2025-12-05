@@ -23,6 +23,28 @@ export class PickupPointFormComponent implements OnInit {
     selectedContainers: string[] = [];
     containerSearchTerm: string = '';
 
+    // Location picker state
+    showLocationDropdown: boolean = false;
+    selectedLocationName: string = '';
+
+    // Predefined locations in Monastir
+    predefinedLocations = [
+        { name: 'Select a location...', lat: 0, lng: 0 },
+        { name: 'Monastir - Marina', lat: 35.7806, lng: 10.8395 },
+        { name: 'Monastir - Ribat', lat: 35.7765, lng: 10.8275 },
+        { name: 'Monastir - Falaise', lat: 35.7692, lng: 10.8156 },
+        { name: 'Monastir - Centre Ville', lat: 35.7643, lng: 10.8113 },
+        { name: 'Monastir - Stade', lat: 35.7589, lng: 10.8298 },
+        { name: 'Monastir - Skanes', lat: 35.7856, lng: 10.7625 },
+        { name: 'Monastir - Aéroport', lat: 35.7581, lng: 10.7547 },
+        { name: 'Moknine - Centre', lat: 35.6344, lng: 10.9003 },
+        { name: 'Moknine - Zone Industrielle', lat: 35.6289, lng: 10.9125 },
+        { name: 'Monastir - Corniche', lat: 35.7712, lng: 10.8342 },
+        { name: 'Monastir - Université', lat: 35.7521, lng: 10.8156 },
+        { name: 'Monastir - Zone Touristique', lat: 35.7923, lng: 10.7814 }
+    ];
+    selectedLocation: string = '';
+
     constructor(
         private formBuilder: FormBuilder,
         private matDialogRef: MatDialogRef<PickupPointFormComponent>,
@@ -111,6 +133,46 @@ export class PickupPointFormComponent implements OnInit {
                 return type.includes(searchLower) || status.includes(searchLower) || id.includes(searchLower);
             });
         }
+    }
+
+    onLocationSelect(event: Event) {
+        const selectElement = event.target as HTMLSelectElement;
+        const locationName = selectElement.value;
+
+        if (!locationName) return;
+
+        const location = this.predefinedLocations.find(loc => loc.name === locationName);
+        if (location && location.lat !== 0 && location.lng !== 0) {
+            this.formGroup.patchValue({
+                locationLatitude: location.lat,
+                locationLongitude: location.lng,
+                address: location.name
+            });
+            this.toastService.showSuccess(`Location set to ${location.name}`);
+        }
+    }
+
+    toggleLocationDropdown() {
+        this.showLocationDropdown = !this.showLocationDropdown;
+    }
+
+    selectLocation(location: any, index: number) {
+        // Skip the first "Select a location..." option
+        if (index === 0) {
+            this.showLocationDropdown = false;
+            return;
+        }
+
+        if (location.lat !== 0 && location.lng !== 0) {
+            this.selectedLocationName = location.name;
+            this.formGroup.patchValue({
+                locationLatitude: location.lat,
+                locationLongitude: location.lng,
+                address: location.name
+            });
+            this.toastService.showSuccess(`Location set to ${location.name}`);
+        }
+        this.showLocationDropdown = false;
     }
 
     onSubmit() {

@@ -85,12 +85,61 @@
           <label for="status" class="form-label"
             >Status <span class="required">*</span></label
           >
-          <div class="input-wrapper">
-            <select id="status" formControlName="status" class="form-select">
-              <option *ngFor="let status of incidentStatuses" [value]="status">
-                {{ status | titlecase }}
-              </option>
-            </select>
+          <div class="custom-select-wrapper">
+            <div
+              class="custom-select-box"
+              [class.active]="showStatusDropdown"
+              (click)="toggleStatusDropdown()"
+            >
+              <span
+                class="custom-select-text"
+                [class.placeholder]="!selectedStatusName"
+              >
+                {{ selectedStatusName || "Select status" }}
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="dropdown-arrow"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.5"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+
+            <div class="custom-dropdown" *ngIf="showStatusDropdown">
+              <div class="custom-dropdown-container">
+                <div
+                  *ngFor="let status of incidentStatuses"
+                  class="custom-option"
+                  [class.selected]="formGroup.get('status')?.value === status"
+                  (click)="selectStatus(status)"
+                >
+                  <span>{{ status | titlecase }}</span>
+                  <svg
+                    *ngIf="formGroup.get('status')?.value === status"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="check-icon"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -98,19 +147,63 @@
           <label for="priority" class="form-label"
             >Priority <span class="required">*</span></label
           >
-          <div class="input-wrapper">
-            <select
-              id="priority"
-              formControlName="priority"
-              class="form-select"
+          <div class="custom-select-wrapper">
+            <div
+              class="custom-select-box"
+              [class.active]="showPriorityDropdown"
+              (click)="togglePriorityDropdown()"
             >
-              <option
-                *ngFor="let priority of incidentPriorities"
-                [value]="priority"
+              <span
+                class="custom-select-text"
+                [class.placeholder]="!selectedPriorityName"
               >
-                {{ priority | titlecase }}
-              </option>
-            </select>
+                {{ selectedPriorityName || "Select priority" }}
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="dropdown-arrow"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.5"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+
+            <div class="custom-dropdown" *ngIf="showPriorityDropdown">
+              <div class="custom-dropdown-container">
+                <div
+                  *ngFor="let priority of incidentPriorities"
+                  class="custom-option"
+                  [class.selected]="
+                    formGroup.get('priority')?.value === priority
+                  "
+                  (click)="selectPriority(priority)"
+                >
+                  <span>{{ priority | titlecase }}</span>
+                  <svg
+                    *ngIf="formGroup.get('priority')?.value === priority"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="check-icon"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -121,17 +214,63 @@
           <label for="citizenId" class="form-label"
             >Reported By <span class="required">*</span></label
           >
-          <div class="input-wrapper">
-            <select
-              id="citizenId"
-              formControlName="citizenId"
-              class="form-select"
+          <div class="custom-select-wrapper">
+            <div
+              class="custom-select-box"
+              [class.active]="showCitizenDropdown"
+              (click)="toggleCitizenDropdown()"
             >
-              <option value="" disabled selected>Select user</option>
-              <option *ngFor="let user of users" [value]="user.id">
-                {{ user.userName }} ({{ user.email }})
-              </option>
-            </select>
+              <span
+                class="custom-select-text"
+                [class.placeholder]="!selectedCitizenName"
+              >
+                {{ selectedCitizenName || "Select user" }}
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="dropdown-arrow"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.5"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+
+            <div class="custom-dropdown" *ngIf="showCitizenDropdown">
+              <div class="custom-dropdown-container">
+                <div
+                  *ngFor="let user of users"
+                  class="custom-option"
+                  [class.selected]="
+                    formGroup.get('citizenId')?.value === user.id
+                  "
+                  (click)="selectCitizen(user)"
+                >
+                  <span>{{ user.userName }} ({{ user.email }})</span>
+                  <svg
+                    *ngIf="formGroup.get('citizenId')?.value === user.id"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="check-icon"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
           </div>
           <div
             class="error-message"
@@ -148,17 +287,74 @@
           <label for="pickUpPointId" class="form-label"
             >Related Pickup Point</label
           >
-          <div class="input-wrapper">
-            <select
-              id="pickUpPointId"
-              formControlName="pickUpPointId"
-              class="form-select"
+          <div class="custom-select-wrapper">
+            <div
+              class="custom-select-box"
+              [class.active]="showPickupPointDropdown"
+              (click)="togglePickupPointDropdown()"
             >
-              <option value="">None</option>
-              <option *ngFor="let p of pickUpPoints" [value]="p.id">
-                {{ p.address }}
-              </option>
-            </select>
+              <span
+                class="custom-select-text"
+                [class.placeholder]="!selectedPickupPointName"
+              >
+                {{ selectedPickupPointName || "None" }}
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="dropdown-arrow"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2.5"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+
+            <div class="custom-dropdown" *ngIf="showPickupPointDropdown">
+              <div class="custom-dropdown-container">
+                <div
+                  class="custom-option"
+                  [class.selected]="!formGroup.get('pickUpPointId')?.value"
+                  (click)="
+                    formGroup.patchValue({ pickUpPointId: '' });
+                    selectedPickupPointName = '';
+                    showPickupPointDropdown = false
+                  "
+                >
+                  <span>None</span>
+                </div>
+                <div
+                  *ngFor="let p of pickUpPoints"
+                  class="custom-option"
+                  [class.selected]="
+                    formGroup.get('pickUpPointId')?.value === p.id
+                  "
+                  (click)="selectPickupPoint(p)"
+                >
+                  <span>{{ p.address }}</span>
+                  <svg
+                    *ngIf="formGroup.get('pickUpPointId')?.value === p.id"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="check-icon"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="3"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -167,20 +363,19 @@
       <div class="form-group">
         <label for="assignedTo" class="form-label">Assigned To</label>
         <div class="input-wrapper">
-          <select id="assignedTo" formControlName="assignedTo" class="form-select">
-            <option value="">Not assigned</option>
-            <option *ngFor="let user of users" [value]="user.id">
-              {{ user.userName }} ({{ user.email }})
-            </option>
-          </select>
+          <input
+            type="text"
+            class="form-input"
+            placeholder="Optional - Not yet implemented"
+            disabled
+          />
         </div>
+        <p class="help-text">Auto-assignment feature coming soon</p>
       </div>
 
       <!-- Resolution Notes -->
       <div class="form-group" *ngIf="editMode">
-        <label for="resolutionNotes" class="form-label"
-          >Resolution Notes</label
-        >
+        <label for="resolutionNotes" class="form-label">Resolution Notes</label>
         <div class="input-wrapper">
           <textarea
             id="resolutionNotes"
