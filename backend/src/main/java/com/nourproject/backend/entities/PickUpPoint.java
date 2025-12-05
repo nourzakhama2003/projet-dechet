@@ -25,7 +25,6 @@ public class PickUpPoint {
     
     @DocumentReference(lazy = true)  // Store container references, load on demand
     private List<Container> containers;
-    
     private double locationLatitude;
     private double locationLongitude;
     private String address;

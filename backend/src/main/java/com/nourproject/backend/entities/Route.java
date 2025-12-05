@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -23,13 +24,15 @@ public class Route {
     @Id
     private String _id;
 
+    @DocumentReference(lazy = true)
     @Builder.Default
     private List<PickUpPoint> pickUpPoints = new ArrayList<>();
 
+    @DocumentReference(lazy = true)
     private Vehicule vehicule;
 
-    @Builder.Default
-    private List<User> users = new ArrayList<>();
+    @DocumentReference(lazy = true)
+    private List<User> users;
 
     private LocalDateTime routeDate;
 

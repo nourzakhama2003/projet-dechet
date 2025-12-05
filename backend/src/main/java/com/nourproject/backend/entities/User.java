@@ -13,6 +13,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
@@ -61,9 +62,9 @@ public class User {
     private LocalDateTime updatedAt;
 
 
-    @Builder.Default
+    @DocumentReference(lazy = true)
     @Field("vehicules")
-    private List<VehiculeType> vehicules = new ArrayList<>();
+    private List<VehiculeType> vehicules ;
 
 
     @Builder.Default
