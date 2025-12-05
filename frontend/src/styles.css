@@ -13,6 +13,11 @@ body {
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
 }
 
+/* Remove rounded corners from Material Dialog */
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  border-radius: 0 !important;
+}
+
 /* Modern Perplexity-Inspired Utilities */
 @layer utilities {
   .text-gradient-dark {

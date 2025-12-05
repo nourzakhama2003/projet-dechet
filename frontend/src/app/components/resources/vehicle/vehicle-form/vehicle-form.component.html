@@ -20,7 +20,7 @@
     <div class="title-container">
       <span class="title-dot"></span>
       <h2 class="form-title">
-        {{ editMode ? "Edit Container" : "New Container" }}
+        {{ editMode ? "Edit Vehicle" : "New Vehicle" }}
       </h2>
       <span class="title-dot"></span>
     </div>
@@ -29,45 +29,72 @@
   <!-- Content -->
   <mat-dialog-content class="form-content">
     <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-      <!-- Container Type -->
+      <!-- Matriculation -->
       <div class="form-group">
-        <label for="type" class="form-label"
-          >Container Type <span class="required">*</span></label
+        <label for="matricul" class="form-label"
+          >License Plate <span class="required">*</span></label
         >
         <div class="input-wrapper">
-          <select id="type" formControlName="containerType" class="form-input">
+          <input
+            type="text"
+            id="matricul"
+            formControlName="matricul"
+            class="form-input"
+            placeholder="e.g. ABC-123"
+          />
+        </div>
+        <div
+          class="error-message"
+          *ngIf="
+            formGroup.get('matricul')?.invalid &&
+            formGroup.get('matricul')?.touched
+          "
+        >
+          License plate is required (min 3 characters)
+        </div>
+      </div>
+
+      <!-- Vehicle Type -->
+      <div class="form-group">
+        <label for="type" class="form-label"
+          >🚛 Vehicle Type <span class="required">*</span></label
+        >
+        <div class="select-wrapper">
+          <select id="type" formControlName="type" class="form-select">
             <option value="" disabled>Select type</option>
-            <option *ngFor="let type of containerTypes" [value]="type">
-              {{ type === "carton" ? "📦 Carton" : "🧴 Plastique" }}
+            <option *ngFor="let type of vehicleTypes" [value]="type">
+              {{ type === 'TRUCK' ? '🚛 Truck' : type === 'VAN' ? '🚐 Van' : '🗜️ Compactor' }}
             </option>
           </select>
         </div>
         <div
           class="error-message"
           *ngIf="
-            formGroup.get('containerType')?.invalid &&
-            formGroup.get('containerType')?.touched
+            formGroup.get('type')?.invalid && formGroup.get('type')?.touched
           "
         >
-          Container type is required
+          Vehicle type is required
         </div>
       </div>
 
       <!-- Status -->
       <div class="form-group">
-        <label for="containerStatus" class="form-label"
+        <label for="status" class="form-label"
           >Status <span class="required">*</span></label
         >
-        <div class="input-wrapper">
+        <div class="select-wrapper">
           <select
-            id="containerStatus"
-            formControlName="containerStatus"
-            class="form-input"
+            id="status"
+            formControlName="status"
+            class="form-select"
           >
             <option value="" disabled>Select status</option>
-            <option *ngFor="let status of containerStatus" [value]="status">
-              {{
-                status === "functional" ? "✅ Functional" : "⚠️ Non-Functional"
+            <option *ngFor="let status of vehicleStatuses" [value]="status">
+              {{ 
+                status === 'AVAILABLE' ? '✅ Available' : 
+                status === 'IN_USE' ? '🚀 In Use' : 
+                status === 'MAINTENANCE' ? '🔧 Maintenance' : 
+                '⛔ Out of Service' 
               }}
             </option>
           </select>
@@ -75,19 +102,19 @@
         <div
           class="error-message"
           *ngIf="
-            formGroup.get('containerStatus')?.invalid &&
-            formGroup.get('containerStatus')?.touched
+            formGroup.get('status')?.invalid &&
+            formGroup.get('status')?.touched
           "
         >
           Status is required
         </div>
       </div>
 
-      <!-- Capacity & Fill Level Row -->
+      <!-- Capacity & Current Location Row -->
       <div style="display: flex; gap: 1.5rem">
         <div class="form-group" style="flex: 1">
           <label for="capacity" class="form-label"
-            >Capacity (L) <span class="required">*</span></label
+            >Capacity (kg) <span class="required">*</span></label
           >
           <div class="input-wrapper">
             <input
@@ -95,7 +122,7 @@
               id="capacity"
               formControlName="capacity"
               class="form-input"
-              placeholder="e.g. 100"
+              placeholder="e.g. 1000"
             />
           </div>
           <div
@@ -110,27 +137,17 @@
         </div>
 
         <div class="form-group" style="flex: 1">
-          <label for="fillLevel" class="form-label"
-            >Fill Level (L) <span class="required">*</span></label
+          <label for="currentLocation" class="form-label"
+            >Current Location</label
           >
           <div class="input-wrapper">
             <input
-              type="number"
-              id="fillLevel"
-              formControlName="fillLevel"
+              type="text"
+              id="currentLocation"
+              formControlName="currentLocation"
               class="form-input"
-              placeholder="e.g. 500"
-              min="0"
+              placeholder="Optional"
             />
-          </div>
-          <div
-            class="error-message"
-            *ngIf="
-              formGroup.get('fillLevel')?.invalid &&
-              formGroup.get('fillLevel')?.touched
-            "
-          >
-            Required ≥ 0
           </div>
         </div>
       </div>
@@ -145,13 +162,7 @@
       [disabled]="formGroup.invalid || isLoading"
       (click)="onSubmit()"
     >
-      {{
-        isLoading
-          ? "Saving..."
-          : editMode
-          ? "Update Container"
-          : "Create Container"
-      }}
+      {{ isLoading ? "Saving..." : editMode ? "Update Vehicle" : "Create Vehicle" }}
     </button>
     <button type="button" class="btn-cancel" (click)="onCancel()">
       Cancel

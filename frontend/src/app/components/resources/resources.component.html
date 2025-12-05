@@ -1,7 +1,7 @@
 <div class="flex h-screen bg-gray-50 font-sans overflow-hidden">
   <!-- Sidebar -->
   <div class="realtive">
-    <button class="absolute left-2 mt-2  " (click)="show()">
+    <button class="absolute left-2 mt-2" (click)="show()">
       @if(!sidebarOpen){<svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -27,7 +27,7 @@
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"
-        class="lucide lucide-x-icon lucide-x hover:text-red-500 hover:rotate-45 transition-transform duration-300 "
+        class="lucide lucide-x-icon lucide-x hover:text-red-500 hover:rotate-45 transition-transform duration-300"
       >
         <path d="M18 6 6 18" />
         <path d="m6 6 12 12" /></svg
@@ -272,8 +272,21 @@
       <!-- Add Action Button (Optional) -->
       <div class="inline-flex justify-between items-center gap-6">
         <button
-          *ngIf="activeTab !== 'pickuppoints' && activeTab !== 'routes'"
-          (click)="activeTab === 'users' ? addUser() : null"
+          (click)="
+            activeTab === 'users'
+              ? addUser()
+              : activeTab === 'containers'
+              ? addContainer()
+              : activeTab === 'pickuppoints'
+              ? addPickupPoint()
+              : activeTab === 'vehicles'
+              ? addVehicle()
+              : activeTab === 'routes'
+              ? addRoute()
+              : activeTab === 'incidents'
+              ? addIncident()
+              : addNotification()
+          "
           class="btn"
         >
           <!-- SVG avec taille fixe + centrage parfait -->
@@ -289,10 +302,7 @@
             <path d="M12 5v14m-7-7h14" />
           </svg>
           <span>
-            @if (activeTab === 'users') { Add User } @else if (activeTab ===
-            'containers') { Add Container } @else if (activeTab === 'vehicles')
-            { Add Vehicle } @else if (activeTab === 'incidents') { Add Incident
-            } @else if (activeTab === 'notifications') { Add Notification }
+            @if (activeTab === 'users') { Add User } @else if (activeTab === 'containers') { Add Container } @else if (activeTab === 'pickuppoints') { Add Pickup Point } @else if (activeTab === 'vehicles') { Add Vehicle } @else if (activeTab === 'routes') { Add Route } @else if (activeTab === 'incidents') { Add Incident } @else if (activeTab === 'notifications') { Add Notification }
           </span>
         </button>
       </div>

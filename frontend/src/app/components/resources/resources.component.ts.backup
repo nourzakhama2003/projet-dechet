@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { UserService } from '../../services/user.service';
@@ -326,20 +326,12 @@ export class ResourcesComponent implements OnInit {
 
             // If containers were selected, assign them
             if (containerIds && containerIds.length > 0 && pickupPoint) {
-              this.assignContainersToPickupPoint(containerIds, pickupPoint.id)
-                .then(() => {
-                  this.toastService.showSuccess('Pickup point created and containers assigned');
-                  this.loadPickupPoints();
-                  this.loadContainers(); // Refresh containers to show updated assignment
-                  this.loading = false;
-                })
-                .catch((error) => {
-                  console.error('Error assigning containers:', error);
-                  this.toastService.showError('Pickup point created but some containers could not be assigned');
-                  this.loadPickupPoints();
-                  this.loadContainers();
-                  this.loading = false;
-                });
+              this.assignContainersToPickupPoint(containerIds, pickupPoint.id).then(() => {
+                this.toastService.showSuccess('Pickup point created and containers assigned');
+                this.loadPickupPoints();
+                this.loadContainers(); // Refresh containers to show updated assignment
+                this.loading = false;
+              });
             } else {
               this.toastService.showSuccess('Pickup point created successfully');
               if (pickupPoint) {
@@ -360,15 +352,9 @@ export class ResourcesComponent implements OnInit {
   }
 
   editPickupPoint(point: any) {
-    // Extract container IDs from the containers array
-    const containerIds = point.containers?.map((c: any) => c.id) || [];
-
     const dialogRef = this.dialog.open(PickupPointFormComponent, {
       width: '600px',
-      data: {
-        ...point,
-        containerIds: containerIds // Pass the IDs for pre-selection
-      }
+      data: { ...point }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -382,20 +368,12 @@ export class ResourcesComponent implements OnInit {
 
             // If containers were selected/changed, assign them
             if (containerIds !== undefined && pickupPoint) {
-              this.assignContainersToPickupPoint(containerIds, pickupPoint.id)
-                .then(() => {
-                  this.toastService.showSuccess('Pickup point updated and containers assigned');
-                  this.loadPickupPoints();
-                  this.loadContainers();
-                  this.loading = false;
-                })
-                .catch((error) => {
-                  console.error('Error assigning containers:', error);
-                  this.toastService.showError('Pickup point updated but some containers could not be assigned');
-                  this.loadPickupPoints();
-                  this.loadContainers();
-                  this.loading = false;
-                });
+              this.assignContainersToPickupPoint(containerIds, pickupPoint.id).then(() => {
+                this.toastService.showSuccess('Pickup point updated and containers assigned');
+                this.loadPickupPoints();
+                this.loadContainers();
+                this.loading = false;
+              });
             } else {
               this.toastService.showSuccess('Pickup point updated successfully');
               if (pickupPoint) {
@@ -443,50 +421,41 @@ export class ResourcesComponent implements OnInit {
   /**
    * Helper to assign containers to a pickup point.
    * This handles the bidirectional relationship:
-   * 1. Unassign previously assigned containers from this pickup point
-   * 2. Update each selected container's pickUpPointId
-   * 3. Updates the pickup point's list of containers
+   * 1. Updates each container's pickUpPointId
+   * 2. Updates the pickup point's list of containers (for @DocumentReference)
    */
   async assignContainersToPickupPoint(containerIds: string[], pickupPointId: string): Promise<void> {
     try {
-      // Step 1: Get all containers to find previously assigned ones
-      const containersResponse = await this.containerService.getAll().toPromise();
-      const allContainers = (containersResponse as any).containers || [];
+      // Step 1: Update each container's pickUpPointId
+      // Note: We should also clear pickUpPointId for containers that were removed, 
+      // but for now we focus on assigning the selected ones.
+      // Ideally, we'd fetch all containers for this PP and unassign those not in containerIds.
+      // But let's start with assigning the selected ones.
 
-      // Find containers previously assigned to this pickup point
-      const previouslyAssigned = allContainers.filter((c: any) =>
-        c.pickUpPointId === pickupPointId
-      );
-
-      // Step 2: Unassign containers that were previously assigned but are not selected now
-      const toUnassign = previouslyAssigned.filter((c: any) =>
-        !containerIds.includes(c.id)
-      );
-
-      const unassignPromises = toUnassign.map((container: any) => {
-        return this.containerService.update(container.id, {
-          pickUpPointId: undefined
-        }).toPromise();
-      });
-
-      await Promise.all(unassignPromises);
-
-      // Step 3: Assign the selected containers to this pickup point
-      const assignPromises = containerIds.map(containerId => {
+      const updatePromises = containerIds.map(containerId => {
         return this.containerService.update(containerId, {
           pickUpPointId: pickupPointId
         }).toPromise();
       });
 
-      await Promise.all(assignPromises);
+      await Promise.all(updatePromises);
 
-      // Step 4: Sync the containers array in the pickup point document
-      await this.pickupPointService.syncContainers(pickupPointId).toPromise();
+      // Step 2: Fetch the full container objects to send to the pickup point
+      // This is necessary because @DocumentReference expects a list of objects (or DBRefs)
+      const containersResponse = await this.containerService.getAll().toPromise();
+      const allContainers = (containersResponse as any).containers || [];
+      const selectedContainers = allContainers.filter((c: any) =>
+        containerIds.includes(c.id)
+      );
+
+      // Step 3: Update the pickup point with the container references
+      await this.pickupPointService.update(pickupPointId, {
+        containers: selectedContainers
+      }).toPromise();
 
     } catch (error) {
       console.error('Error assigning containers:', error);
       this.toastService.showError('Some containers could not be assigned');
-      throw error; // Re-throw to handle in the calling function
     }
   }
 
@@ -786,10 +755,6 @@ export class ResourcesComponent implements OnInit {
   // --------------------------------------------------------------------------------
   // ROUTES
   // --------------------------------------------------------------------------------
-  addRoute() {
-    this.toastService.showInfo('Please use the map to create optimized routes');
-  }
-
   loadRoutes() {
     this.loading = true;
     this.routeService.getAll().subscribe({
