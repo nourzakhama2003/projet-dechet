@@ -5,7 +5,7 @@ RUN mvn dependency:go-offline
 COPY src .
 RUN mvn clean package -DskipTest
 
-WORKDIR /app  AS runtime 
-COPY --from=build /build/target/dechet.1.0.0.jar /app/dechet.1.0.0.jar 
+WORKDIR /app  AS runtime
+COPY --from=build /build/target/dechet.1.0.0.jar /app/dechet.1.0.0.jar
 EXPOSE 8082
 CMD ["java","-jar","/app/dechet.1.0.0.jar"]
