@@ -81,7 +81,7 @@
       <div *ngIf="!isEditMode">
         <div
           class="vehicle-card"
-          *ngIf="selectedVehicle && selectedVehicle._id"
+          *ngIf="selectedVehicle && (selectedVehicle.id || selectedVehicle._id)"
         >
           <div class="flex items-center gap-4">
             <div class="vehicle-icon">🚛</div>
@@ -109,7 +109,9 @@
         </div>
         <div
           class="empty-state"
-          *ngIf="!selectedVehicle || !selectedVehicle._id"
+          *ngIf="
+            !selectedVehicle || (!selectedVehicle.id && !selectedVehicle._id)
+          "
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -164,14 +166,20 @@
               <div
                 *ngFor="let vehicle of availableVehicles"
                 class="custom-option"
-                [class.selected]="selectedVehicle?._id === vehicle._id"
+                [class.selected]="
+                  (selectedVehicle?.id || selectedVehicle?._id) ===
+                  (vehicle.id || vehicle._id)
+                "
                 (click)="selectVehicle(vehicle)"
               >
                 <span
                   >🚛 {{ vehicle.matricul }} - {{ vehicle.vehiculeType }}</span
                 >
                 <svg
-                  *ngIf="selectedVehicle?._id === vehicle._id"
+                  *ngIf="
+                    (selectedVehicle?.id || selectedVehicle?._id) ===
+                    (vehicle.id || vehicle._id)
+                  "
                   xmlns="http://www.w3.org/2000/svg"
                   class="check-icon"
                   fill="none"
