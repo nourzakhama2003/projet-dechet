@@ -1,807 +1,441 @@
-<div class="min-h-screen bg-gray-50 font-sans">
+<div class="container-fluid py-4">
   <!-- Header -->
-  <div class="bg-white border-b border-gray-200 sticky top-0 z-10">
-    <div class="max-w-7xl mx-auto px-6 py-6">
-      <div class="flex justify-between items-center">
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center flex-wrap">
         <div>
-          <h1 class="text-3xl font-bold text-gray-800">Tableau de Bord</h1>
-          <p class="text-gray-500 mt-1">
-            Vue d'ensemble de la gestion des déchets
-          </p>
+          <h1 class="h3 mb-1 fw-bold">Tableau de Bord</h1>
+          <p class="text-muted mb-0">Vue d'ensemble du système de gestion des déchets</p>
         </div>
-        <button
-          (click)="loadAllData()"
-          class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg shadow-md transition-colors duration-200 flex items-center"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 mr-2"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-            />
-          </svg>
+        <button class="btn btn-primary" (click)="loadAllData()" [disabled]="isLoading">
+          <i class="bi bi-arrow-clockwise"></i>
           Actualiser
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Loading State -->
   @if (isLoading) {
-  <div class="flex justify-center items-center h-96">
-    <div
-      class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"
-    ></div>
-  </div>
-  }
-
-  <!-- Error State -->
-  @if (errorMessage && !isLoading) {
-  <div class="max-w-7xl mx-auto px-6 py-8">
-    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
-      <p class="text-red-800">{{ errorMessage }}</p>
-    </div>
-  </div>
-  }
-
-  <!-- Main Content -->
-  @if (!isLoading && !errorMessage) {
-  <div class="max-w-7xl mx-auto px-6 py-8">
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-      <!-- Users Card -->
-      <div
-        class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow"
-      >
-        <div class="flex items-center justify-between mb-4">
-          <div
-            class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 text-blue-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-              />
-            </svg>
-          </div>
+    <div class="card shadow-sm">
+      <div class="card-body text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Chargement...</span>
         </div>
-        <h3 class="text-3xl font-bold text-gray-900 mb-1">
-          {{ users.length }}
-        </h3>
-        <p class="text-gray-600 text-sm mb-2">Utilisateurs</p>
-        <span class="text-xs text-blue-600 font-medium"
-          >{{ activeUsersCount }} actifs</span
-        >
-      </div>
-
-      <!-- Vehicles Card -->
-      <div
-        class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow"
-      >
-        <div class="flex items-center justify-between mb-4">
-          <div
-            class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 text-slate-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"
-              />
-            </svg>
-          </div>
-        </div>
-        <h3 class="text-3xl font-bold text-gray-900 mb-1">
-          {{ vehicules.length }}
-        </h3>
-        <p class="text-gray-600 text-sm mb-2">Véhicules</p>
-        <span class="text-xs text-slate-600 font-medium"
-          >{{ availableVehiculesCount }} disponibles</span
-        >
-      </div>
-
-      <!-- Containers Card -->
-      <div
-        class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow"
-      >
-        <div class="flex items-center justify-between mb-4">
-          <div
-            class="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 text-orange-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-              />
-            </svg>
-          </div>
-        </div>
-        <h3 class="text-3xl font-bold text-gray-900 mb-1">
-          {{ containers.length }}
-        </h3>
-        <p class="text-gray-600 text-sm mb-2">Conteneurs</p>
-        <span class="text-xs text-orange-600 font-medium"
-          >{{ functionalContainersCount }} fonctionnels</span
-        >
-      </div>
-
-      <!-- Pickup Points Card -->
-      <div
-        class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow"
-      >
-        <div class="flex items-center justify-between mb-4">
-          <div
-            class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 text-green-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-              />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-            </svg>
-          </div>
-        </div>
-        <h3 class="text-3xl font-bold text-gray-900 mb-1">
-          {{ pickuppoints.length }}
-        </h3>
-        <p class="text-gray-600 text-sm mb-2">Points de Collecte</p>
-        <span class="text-xs text-green-600 font-medium">Actifs</span>
-      </div>
-
-      <!-- Routes Card -->
-      <div
-        class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow"
-      >
-        <div class="flex items-center justify-between mb-4">
-          <div
-            class="w-12 h-12 rounded-xl bg-cyan-100 flex items-center justify-center"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 text-cyan-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 9m0 11V9m0 0L9 7"
-              />
-            </svg>
-          </div>
-        </div>
-        <h3 class="text-3xl font-bold text-gray-900 mb-1">
-          {{ routes.length }}
-        </h3>
-        <p class="text-gray-600 text-sm mb-2">Routes</p>
-        <span class="text-xs text-cyan-600 font-medium"
-          >{{ todayRoutesCount }} aujourd'hui</span
-        >
+        <p class="mt-3 text-muted">Chargement des données...</p>
       </div>
     </div>
-
-    <!-- Navigation Tabs -->
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 mb-8 p-2">
-      <div class="flex flex-wrap gap-2">
-        <button
-          [class.bg-gray-100]="activeSection === 'overview'"
-          [class.text-gray-900]="activeSection === 'overview'"
-          [class.text-gray-600]="activeSection !== 'overview'"
-          (click)="setActiveSection('overview')"
-          class="px-4 py-2.5 rounded-lg font-medium transition-all duration-200 hover:bg-gray-50"
-        >
-          📊 Vue d'ensemble
-        </button>
-        <button
-          [class.bg-gray-100]="activeSection === 'users'"
-          [class.text-gray-900]="activeSection === 'users'"
-          [class.text-gray-600]="activeSection !== 'users'"
-          (click)="setActiveSection('users')"
-          class="px-4 py-2.5 rounded-lg font-medium transition-all duration-200 hover:bg-gray-50"
-        >
-          👥 Utilisateurs
-        </button>
-        <button
-          [class.bg-gray-100]="activeSection === 'vehicules'"
-          [class.text-gray-900]="activeSection === 'vehicules'"
-          [class.text-gray-600]="activeSection !== 'vehicules'"
-          (click)="setActiveSection('vehicules')"
-          class="px-4 py-2.5 rounded-lg font-medium transition-all duration-200 hover:bg-gray-50"
-        >
-          🚛 Véhicules
-        </button>
-        <button
-          [class.bg-gray-100]="activeSection === 'containers'"
-          [class.text-gray-900]="activeSection === 'containers'"
-          [class.text-gray-600]="activeSection !== 'containers'"
-          (click)="setActiveSection('containers')"
-          class="px-4 py-2.5 rounded-lg font-medium transition-all duration-200 hover:bg-gray-50"
-        >
-          🗑️ Conteneurs
-        </button>
-        <button
-          [class.bg-gray-100]="activeSection === 'routes'"
-          [class.text-gray-900]="activeSection === 'routes'"
-          [class.text-gray-600]="activeSection !== 'routes'"
-          (click)="setActiveSection('routes')"
-          class="px-4 py-2.5 rounded-lg font-medium transition-all duration-200 hover:bg-gray-50"
-        >
-          🛣️ Routes
-        </button>
-        <button
-          [class.bg-gray-100]="activeSection === 'pickuppoints'"
-          [class.text-gray-900]="activeSection === 'pickuppoints'"
-          [class.text-gray-600]="activeSection !== 'pickuppoints'"
-          (click)="setActiveSection('pickuppoints')"
-          class="px-4 py-2.5 rounded-lg font-medium transition-all duration-200 hover:bg-gray-50"
-        >
-          📍 Points de Collecte
-        </button>
-      </div>
+  } @else if (errorMessage) {
+    <div class="alert alert-danger" role="alert">
+      {{ errorMessage }}
     </div>
+  } @else {
+    <div>
+      <!-- Key Metrics Cards -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-6 col-lg-3">
+          <div class="card shadow-sm h-100 border-start border-primary border-4">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="bg-primary bg-opacity-10 rounded p-3 me-3">
+                  <i class="bi bi-people fs-2 text-primary"></i>
+                </div>
+                <div class="flex-grow-1">
+                  <div class="h2 mb-0 fw-bold">{{ users.length }}</div>
+                  <div class="text-muted small">Utilisateurs</div>
+                  <div class="text-muted small mt-1">{{ activeUsersCount }} actifs</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-    <!-- Overview Section -->
-    @if (activeSection === 'overview') {
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <!-- Statistics Card -->
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <h3 class="text-xl font-bold text-gray-900 mb-6">
-          📈 Statistiques Détaillées
-        </h3>
-        <div class="space-y-4">
-          <div
-            class="flex justify-between items-center pb-4 border-b border-gray-100"
-          >
-            <span class="text-gray-600">Utilisateurs actifs</span>
-            <span class="font-bold text-gray-900"
-              >{{ activeUsersCount }} / {{ users.length }}</span
-            >
+        <div class="col-md-6 col-lg-3">
+          <div class="card shadow-sm h-100 border-start border-success border-4">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="bg-success bg-opacity-10 rounded p-3 me-3">
+                  <i class="bi bi-truck fs-2 text-success"></i>
+                </div>
+                <div class="flex-grow-1">
+                  <div class="h2 mb-0 fw-bold">{{ vehicules.length }}</div>
+                  <div class="text-muted small">Véhicules</div>
+                  <div class="text-muted small mt-1">{{ availableVehiculesCount }} disponibles</div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div
-            class="flex justify-between items-center pb-4 border-b border-gray-100"
-          >
-            <span class="text-gray-600">Véhicules opérationnels</span>
-            <span class="font-bold text-gray-900"
-              >{{ availableVehiculesCount }} / {{ vehicules.length }}</span
-            >
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+          <div class="card shadow-sm h-100 border-start border-info border-4">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="bg-info bg-opacity-10 rounded p-3 me-3">
+                  <i class="bi bi-trash fs-2 text-info"></i>
+                </div>
+                <div class="flex-grow-1">
+                  <div class="h2 mb-0 fw-bold">{{ containers.length }}</div>
+                  <div class="text-muted small">Conteneurs</div>
+                  <div class="text-muted small mt-1">{{ functionalContainersCount }} fonctionnels</div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div
-            class="flex justify-between items-center pb-4 border-b border-gray-100"
-          >
-            <span class="text-gray-600">Conteneurs fonctionnels</span>
-            <span class="font-bold text-gray-900"
-              >{{ functionalContainersCount }} / {{ containers.length }}</span
-            >
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-gray-600">Routes aujourd'hui</span>
-            <span class="font-bold text-gray-900">{{ todayRoutesCount }}</span>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+          <div class="card shadow-sm h-100 border-start border-warning border-4">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="bg-warning bg-opacity-10 rounded p-3 me-3">
+                  <i class="bi bi-exclamation-triangle fs-2 text-warning"></i>
+                </div>
+                <div class="flex-grow-1">
+                  <div class="h2 mb-0 fw-bold">{{ incidents.length }}</div>
+                  <div class="text-muted small">Incidents</div>
+                  <div class="text-muted small mt-1">{{ highPriorityIncidentsCount }} haute priorité</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Quick Actions Card -->
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <h3 class="text-xl font-bold text-gray-900 mb-6">⚡ Actions Rapides</h3>
-        <div class="grid grid-cols-2 gap-4">
-          <button
-            (click)="setActiveSection('users')"
-            class="p-4 rounded-xl border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 text-left"
-          >
-            <div class="text-2xl mb-2">👥</div>
-            <div class="font-medium text-gray-900">Utilisateurs</div>
-            <div class="text-xs text-gray-500">Gérer les comptes</div>
-          </button>
-          <button
-            (click)="setActiveSection('vehicules')"
-            class="p-4 rounded-xl border border-gray-200 hover:border-slate-300 hover:bg-slate-50 transition-all duration-200 text-left"
-          >
-            <div class="text-2xl mb-2">🚛</div>
-            <div class="font-medium text-gray-900">Véhicules</div>
-            <div class="text-xs text-gray-500">Gérer la flotte</div>
-          </button>
-          <button
-            (click)="setActiveSection('routes')"
-            class="p-4 rounded-xl border border-gray-200 hover:border-cyan-300 hover:bg-cyan-50 transition-all duration-200 text-left"
-          >
-            <div class="text-2xl mb-2">🛣️</div>
-            <div class="font-medium text-gray-900">Routes</div>
-            <div class="text-xs text-gray-500">Planifier collectes</div>
-          </button>
-          <button
-            (click)="loadAllData()"
-            class="p-4 rounded-xl border border-gray-200 hover:border-green-300 hover:bg-green-50 transition-all duration-200 text-left"
-          >
-            <div class="text-2xl mb-2">🔄</div>
-            <div class="font-medium text-gray-900">Actualiser</div>
-            <div class="text-xs text-gray-500">Rafraîchir données</div>
-          </button>
-        </div>
-      </div>
-    </div>
-    }
-
-    <!-- Users Section -->
-    @if (activeSection === 'users') {
-    <div
-      class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
-    >
-      <div class="px-6 py-4 border-b border-gray-100">
-        <h3 class="text-lg font-bold text-gray-800">
-          👥 Liste des Utilisateurs
-        </h3>
-      </div>
-      @if (users.length > 0) {
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-          <thead>
-            <tr
-              class="bg-gray-50 border-b border-gray-100 text-xs uppercase text-gray-500 tracking-wider font-semibold"
-            >
-              <th class="px-6 py-4">Utilisateur</th>
-              <th class="px-6 py-4">Email</th>
-              <th class="px-6 py-4">Rôle</th>
-              <th class="px-6 py-4">Statut</th>
-              <th class="px-6 py-4">Auth Faciale</th>
-              <th class="px-6 py-4">Créé le</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-50">
-            @for (user of users; track user.id) {
-            <tr class="hover:bg-gray-50 transition-colors duration-150">
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex items-center">
-                  <div
-                    class="h-10 w-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center text-blue-600 font-bold text-sm shadow-sm"
-                  >
-                    {{ user.firstName.charAt(0) || "U"
-                    }}{{ user.lastName.charAt(0) || "" }}
+      <!-- Charts Section -->
+      <div class="mb-4">
+        <h2 class="h4 fw-bold mb-4">Analyses Visuelles</h2>
+        
+        <div class="row g-4">
+          <!-- Incident Status Chart (Priority Chart with Danger Vibe) -->
+          <div class="col-lg-6">
+            <div class="card shadow-sm h-100 border-start border-danger border-4">
+              <div class="card-header bg-danger bg-opacity-10 border-bottom border-danger">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h5 class="card-title mb-1 fw-bold text-danger">
+                      <i class="bi bi-speedometer2 me-2"></i>
+                      Niveau de Danger - Incidents
+                    </h5>
+                    <p class="text-danger small mb-0 fw-medium">Jauge de criticité - Intervention immédiate si zone rouge</p>
                   </div>
-                  <div class="ml-4">
-                    <div class="text-sm font-medium text-gray-900">
-                      {{ user.firstName }} {{ user.lastName }}
+                  <button class="btn btn-outline-danger btn-sm" (click)="loadIncidents()" [disabled]="isLoading">
+                    <i class="bi bi-arrow-clockwise"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart-container" style="min-height: 300px;">
+                  @if (incidentStatusChart && incidentStatusChart.series && incidentStatusChart.series.length > 0) {
+                    <apx-chart
+                      [series]="incidentStatusChart.series"
+                      [chart]="incidentStatusChart.chart"
+                      [plotOptions]="incidentStatusChart.plotOptions"
+                      [labels]="incidentStatusChart.labels"
+                      [colors]="incidentStatusChart.colors"
+                      [fill]="incidentStatusChart.fill"
+                      [responsive]="incidentStatusChart.responsive">
+                    </apx-chart>
+                  } @else {
+                    <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                      <div class="text-center">
+                        <i class="bi bi-check-circle fs-1 text-success mb-2"></i>
+                        <p class="mb-0">Aucun incident signalé</p>
+                      </div>
                     </div>
-                    <div class="text-xs text-gray-500">
-                      @{{ user.userName }}
-                    </div>
+                  }
+                </div>
+                <!-- Danger Level Indicator -->
+                <div class="text-center mt-3">
+                  <span class="badge {{ incidentDangerColor }} fs-6 fw-bold px-3 py-2">
+                    🚨 NIVEAU: {{ incidentDangerLevel }} ({{ incidentDangerPercentage }}%)
+                  </span>
+                </div>
+              </div>
+              <div class="card-footer bg-danger bg-opacity-5 border-top border-danger">
+                <div class="row text-center">
+                  <div class="col-2">
+                    <div class="h5 mb-0 fw-bold text-danger">{{ urgentIncidentsCount }}</div>
+                    <small class="text-danger fw-medium">Urgents</small>
+                  </div>
+                  <div class="col-2">
+                    <div class="h5 mb-0 fw-bold text-warning">{{ highPriorityIncidentsCount }}</div>
+                    <small class="text-warning fw-medium">Haute</small>
+                  </div>
+                  <div class="col-2">
+                    <div class="h5 mb-0 fw-bold text-info">{{ mediumPriorityIncidentsCount }}</div>
+                    <small class="text-info fw-medium">Moyenne</small>
+                  </div>
+                  <div class="col-2">
+                    <div class="h5 mb-0 fw-bold text-secondary">{{ lowPriorityIncidentsCount }}</div>
+                    <small class="text-secondary fw-medium">Faible</small>
+                  </div>
+                  <div class="col-2">
+                    <div class="h5 mb-0 fw-bold text-muted">{{ inProgressIncidentsCount }}</div>
+                    <small class="text-muted fw-medium">En cours</small>
+                  </div>
+                  <div class="col-2">
+                    <div class="h5 mb-0 fw-bold text-success">{{ resolvedIncidentsCount }}</div>
+                    <small class="text-success fw-medium">Résolus</small>
                   </div>
                 </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                {{ user.email }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span
-                  class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
-                  [ngClass]="{
-                    'bg-slate-50 text-slate-700 border border-slate-100':
-                      user.role === 'admin',
-                    'bg-blue-50 text-blue-700 border border-blue-100':
-                      user.role === 'employe',
-                    'bg-gray-50 text-gray-700 border border-gray-100':
-                      user.role === 'user'
-                  }"
-                >
-                  {{ user.role }}
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span
-                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                  [ngClass]="{
-                    'bg-green-100 text-green-800': user.isActive,
-                    'bg-gray-100 text-gray-800': !user.isActive
-                  }"
-                >
-                  {{ user.isActive ? "✓ Actif" : "✗ Inactif" }}
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-center">
-                <span
-                  class="inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold"
-                  [ngClass]="{
-                    'bg-green-100 text-green-700': user.faceAuthEnabled,
-                    'bg-gray-100 text-gray-400': !user.faceAuthEnabled
-                  }"
-                >
-                  {{ user.faceAuthEnabled ? "✓" : "✗" }}
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                {{ user.createdAt ? (user.createdAt | date : "short") : "N/A" }}
-              </td>
-            </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-      } @else {
-      <div class="px-6 py-12 text-center text-gray-500">
-        Aucun utilisateur trouvé
-      </div>
-      }
-    </div>
-    }
-
-    <!-- Vehicles Section -->
-    @if (activeSection === 'vehicules') {
-    <div
-      class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
-    >
-      <div class="px-6 py-4 border-b border-gray-100">
-        <h3 class="text-lg font-bold text-gray-800">🚛 Flotte de Véhicules</h3>
-      </div>
-      @if (vehicules.length > 0) {
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-        @for (vehicule of vehicules; track vehicule.id) {
-        <div
-          class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-200"
-        >
-          <div class="flex items-center justify-between mb-4">
-            <div
-              class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 text-slate-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"
-                />
-              </svg>
-            </div>
-            <span
-              class="px-3 py-1 text-xs font-semibold rounded-full"
-              [ngClass]="{
-                'bg-green-100 text-green-700':
-                  vehicule.vehiculeStatus === 'functionel',
-                'bg-red-100 text-red-700':
-                  vehicule.vehiculeStatus === 'non_functionel'
-              }"
-            >
-              {{
-                vehicule.vehiculeStatus === "functionel"
-                  ? "Opérationnel"
-                  : "Maintenance"
-              }}
-            </span>
-          </div>
-          <h4 class="text-lg font-bold text-gray-900 mb-2">
-            {{ vehicule.matricul }}
-          </h4>
-          <div class="space-y-2 text-sm">
-            <div class="flex justify-between text-gray-600">
-              <span>Type:</span>
-              <span class="font-medium text-gray-900">{{
-                vehicule.vehiculeType === "camion" ? "Camion" : "Voiture"
-              }}</span>
-            </div>
-            <div class="flex justify-between text-gray-600">
-              <span>Capacité:</span>
-              <span class="font-medium text-gray-900"
-                >{{ vehicule.capacity }} kg</span
-              >
-            </div>
-          </div>
-        </div>
-        }
-      </div>
-      } @else {
-      <div class="px-6 py-12 text-center text-gray-500">
-        Aucun véhicule disponible
-      </div>
-      }
-    </div>
-    }
-
-    <!-- Containers Section -->
-    @if (activeSection === 'containers') {
-    <div
-      class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
-    >
-      <div class="px-6 py-4 border-b border-gray-100">
-        <h3 class="text-lg font-bold text-gray-800">
-          🗑️ Gestion des Conteneurs
-        </h3>
-      </div>
-      @if (containers.length > 0) {
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-        @for (container of containers; track container.id) {
-        <div
-          class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-200"
-        >
-          <div class="flex items-center justify-between mb-4">
-            <div
-              class="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 text-orange-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                />
-              </svg>
-            </div>
-            <span
-              class="px-3 py-1 text-xs font-semibold rounded-full"
-              [ngClass]="{
-                'bg-green-100 text-green-700':
-                  container.containerStatus !== 'non_functionel',
-                'bg-red-100 text-red-700':
-                  container.containerStatus === 'non_functionel'
-              }"
-            >
-              {{
-                container.containerStatus === "non_functionel"
-                  ? "Endommagé"
-                  : "Fonctionnel"
-              }}
-            </span>
-          </div>
-          <h4 class="text-lg font-bold text-gray-900 mb-2">
-            {{ container.containerType || "Conteneur" }}
-          </h4>
-          <div class="space-y-3 text-sm">
-            <div class="flex justify-between text-gray-600">
-              <span>Capacité:</span>
-              <span class="font-medium text-gray-900"
-                >{{ container.capacity }} L</span
-              >
-            </div>
-            <div>
-              <div class="flex justify-between text-gray-600 mb-2">
-                <span>Niveau de remplissage:</span>
-                <span class="font-medium text-gray-900"
-                  >{{
-                    (container.fillLevel / container.capacity) * 100
-                      | number : "1.0-0"
-                  }}%</span
-                >
-              </div>
-              <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                <div
-                  class="h-full rounded-full transition-all duration-300"
-                  [style.width.%]="
-                    (container.fillLevel / container.capacity) * 100
-                  "
-                  [ngClass]="{
-                    'bg-green-500':
-                      container.fillLevel / container.capacity < 0.5,
-                    'bg-yellow-500':
-                      container.fillLevel / container.capacity >= 0.5 &&
-                      container.fillLevel / container.capacity < 0.8,
-                    'bg-red-500':
-                      container.fillLevel / container.capacity >= 0.8
-                  }"
-                ></div>
               </div>
             </div>
           </div>
-        </div>
-        }
-      </div>
-      } @else {
-      <div class="px-6 py-12 text-center text-gray-500">
-        Aucun conteneur disponible
-      </div>
-      }
-    </div>
-    }
 
-    <!-- Routes Section -->
-    @if (activeSection === 'routes') {
-    <div
-      class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
-    >
-      <div class="px-6 py-4 border-b border-gray-100">
-        <h3 class="text-lg font-bold text-gray-800">🛣️ Planning des Routes</h3>
-      </div>
-      @if (routes.length > 0) {
-      <div class="divide-y divide-gray-100">
-        @for (route of routes; track route.id) {
-        <div class="px-6 py-4 hover:bg-gray-50 transition-colors">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-              <div
-                class="w-10 h-10 rounded-lg bg-cyan-100 flex items-center justify-center"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-cyan-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 9m0 11V9m0 0L9 7"
-                  />
-                </svg>
+          <!-- Container Status Chart -->
+          <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+              <div class="card-header bg-white border-bottom">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h5 class="card-title mb-1 fw-bold">Statut des Conteneurs</h5>
+                    <p class="text-muted small mb-0">Répartition fonctionnel / non-fonctionnel</p>
+                  </div>
+                  <button class="btn btn-outline-primary btn-sm" (click)="loadContainers()" [disabled]="isLoading">
+                    <i class="bi bi-arrow-clockwise"></i>
+                  </button>
+                </div>
               </div>
-              <div>
-                <h4 class="font-medium text-gray-900">
-                  Route du {{ route.routeDate | date : "fullDate" : "" : "fr" }}
-                </h4>
-                <div
-                  class="flex items-center space-x-3 mt-1 text-xs text-gray-500"
-                >
-                  @if (route.startTime) {
-                  <span>⏰ Début: {{ route.startTime }}</span>
-                  } @if (route.endTime) {
-                  <span>⏰ Fin: {{ route.endTime }}</span>
+              <div class="card-body">
+                <div class="chart-container" style="min-height: 300px;">
+                  @if (containerStatusChart && containerStatusChart.series && containerStatusChart.series.length > 0) {
+                    <apx-chart
+                      [series]="containerStatusChart.series"
+                      [chart]="containerStatusChart.chart"
+                      [plotOptions]="containerStatusChart.plotOptions"
+                      [labels]="containerStatusChart.labels"
+                      [colors]="containerStatusChart.colors"
+                      [responsive]="containerStatusChart.responsive">
+                    </apx-chart>
+                  } @else {
+                    <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                      <p class="mb-0">Aucune donnée disponible</p>
+                    </div>
+                  }
+                </div>
+              </div>
+              <div class="card-footer bg-white border-top">
+                <div class="row text-center">
+                  <div class="col-6">
+                    <div class="h5 mb-0 fw-bold text-success">{{ functionalContainersCount }}</div>
+                    <small class="text-muted">Fonctionnels</small>
+                  </div>
+                  <div class="col-6">
+                    <div class="h5 mb-0 fw-bold text-danger">{{ nonFunctionalContainersCount }}</div>
+                    <small class="text-muted">Non-fonctionnels</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Container Type Chart -->
+          <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+              <div class="card-header bg-white border-bottom">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h5 class="card-title mb-1 fw-bold">Types de Conteneurs</h5>
+                    <p class="text-muted small mb-0">Distribution par catégorie</p>
+                  </div>
+                  <button class="btn btn-outline-primary btn-sm" (click)="loadContainers()" [disabled]="isLoading">
+                    <i class="bi bi-arrow-clockwise"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart-container" style="min-height: 300px;">
+                  @if (containerTypeChart && containerTypeChart.series && containerTypeChart.series.length > 0) {
+                    <apx-chart
+                      [series]="containerTypeChart.series"
+                      [chart]="containerTypeChart.chart"
+                      [plotOptions]="containerTypeChart.plotOptions"
+                      [dataLabels]="containerTypeChart.dataLabels"
+                      [xaxis]="containerTypeChart.xaxis"
+                      [colors]="containerTypeChart.colors"
+                      [responsive]="containerTypeChart.responsive">
+                    </apx-chart>
+                  } @else {
+                    <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                      <p class="mb-0">Aucune donnée disponible</p>
+                    </div>
+                  }
+                </div>
+              </div>
+              <div class="card-footer bg-white border-top">
+                <div class="row text-center">
+                  @for (type of containersByType | keyvalue; track type.key) {
+                    <div class="col-6 col-md-3 mb-2">
+                      <div class="h6 mb-0 fw-bold">{{ type.value }}</div>
+                      <small class="text-muted">{{ type.key }}</small>
+                    </div>
                   }
                 </div>
               </div>
             </div>
-            @if (route.status) {
-            <span
-              class="px-3 py-1 text-xs font-semibold rounded-full"
-              [ngClass]="{
-                'bg-blue-100 text-blue-700':
-                  route.status.toUpperCase() === 'PLANNED',
-                'bg-yellow-100 text-yellow-700':
-                  route.status.toUpperCase() === 'IN_PROGRESS',
-                'bg-green-100 text-green-700':
-                  route.status.toUpperCase() === 'COMPLETED',
-                'bg-red-100 text-red-700':
-                  route.status.toUpperCase() === 'CANCELLED'
-              }"
-            >
-              {{ route.status }}
-            </span>
-            }
           </div>
-        </div>
-        }
-      </div>
-      } @else {
-      <div class="px-6 py-12 text-center text-gray-500">
-        Aucune route planifiée
-      </div>
-      }
-    </div>
-    }
 
-    <!-- Pickup Points Section -->
-    @if (activeSection === 'pickuppoints') {
-    <div
-      class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
-    >
-      <div class="px-6 py-4 border-b border-gray-100">
-        <h3 class="text-lg font-bold text-gray-800">📍 Points de Collecte</h3>
-      </div>
-      @if (pickuppoints.length > 0) {
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-        @for (point of pickuppoints; track point.id) {
-        <div
-          class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-200"
-        >
-          <div
-            class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center mb-4"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 text-green-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-              />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-            </svg>
-          </div>
-          <h4 class="text-lg font-bold text-gray-900 mb-3">
-            Point de Collecte
-          </h4>
-          <div class="space-y-2 text-sm text-gray-600">
-            <div>
-              <span class="font-medium">Latitude:</span>
-              {{ point.locationLatitude | number : "1.4-4" }}
+          <!-- Container Fill Level Chart -->
+          <div class="col-12">
+            <div class="card shadow-sm">
+              <div class="card-header bg-white border-bottom">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h5 class="card-title mb-1 fw-bold">Niveaux de Remplissage</h5>
+                    <p class="text-muted small mb-0">Répartition par niveau de remplissage</p>
+                  </div>
+                  <button class="btn btn-outline-primary btn-sm" (click)="loadContainers()" [disabled]="isLoading">
+                    <i class="bi bi-arrow-clockwise"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart-container" style="min-height: 350px;">
+                  @if (containerFillChart && containerFillChart.series && containerFillChart.series.length > 0) {
+                    <apx-chart
+                      [series]="containerFillChart.series"
+                      [chart]="containerFillChart.chart"
+                      [plotOptions]="containerFillChart.plotOptions"
+                      [dataLabels]="containerFillChart.dataLabels"
+                      [stroke]="containerFillChart.stroke"
+                      [fill]="containerFillChart.fill"
+                      [xaxis]="containerFillChart.xaxis"
+                      [colors]="containerFillChart.colors"
+                      [markers]="containerFillChart.markers"
+                      [responsive]="containerFillChart.responsive">
+                    </apx-chart>
+                  } @else {
+                    <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                      <p class="mb-0">Aucune donnée disponible</p>
+                    </div>
+                  }
+                </div>
+              </div>
+              <div class="card-footer bg-white border-top">
+                <div class="row text-center">
+                  <div class="col-6 col-md-3">
+                    <div class="h5 mb-0 fw-bold text-success">{{ containerFillLevels.low }}</div>
+                    <small class="text-muted">Bas (&lt;40%)</small>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="h5 mb-0 fw-bold text-warning">{{ containerFillLevels.medium }}</div>
+                    <small class="text-muted">Moyen (40-69%)</small>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="h5 mb-0 fw-bold text-orange">{{ containerFillLevels.high }}</div>
+                    <small class="text-muted">Élevé (70-89%)</small>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="h5 mb-0 fw-bold text-danger">{{ containerFillLevels.critical }}</div>
+                    <small class="text-muted">Critique (≥90%)</small>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div>
-              <span class="font-medium">Longitude:</span>
-              {{ point.locationLongitude | number : "1.4-4" }}
-            </div>
-            @if (point.containers && point.containers.length > 0) {
-            <div class="mt-3 pt-3 border-t border-gray-200">
-              <span class="font-medium">Conteneurs:</span>
-              {{ point.containers.length }}
-            </div>
-            }
           </div>
         </div>
-        }
       </div>
-      } @else {
-      <div class="px-6 py-12 text-center text-gray-500">
-        Aucun point de collecte disponible
+
+      <!-- Vehicle Analytics Section -->
+      <div class="mb-4">
+        <h2 class="h4 fw-bold mb-4">Analyses des Véhicules</h2>
+        
+        <div class="row g-4">
+          <!-- Vehicle Status Chart -->
+          <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+              <div class="card-header bg-white border-bottom">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h5 class="card-title mb-1 fw-bold">Statut des Véhicules</h5>
+                    <p class="text-muted small mb-0">Répartition fonctionnel / en maintenance</p>
+                  </div>
+                  <button class="btn btn-outline-primary btn-sm" (click)="loadVehicules()" [disabled]="isLoading">
+                    <i class="bi bi-arrow-clockwise"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart-container" style="min-height: 300px;">
+                  @if (vehicleStatusChart && vehicleStatusChart.series && vehicleStatusChart.series.length > 0) {
+                    <apx-chart
+                      [series]="vehicleStatusChart.series"
+                      [chart]="vehicleStatusChart.chart"
+                      [plotOptions]="vehicleStatusChart.plotOptions"
+                      [labels]="vehicleStatusChart.labels"
+                      [colors]="vehicleStatusChart.colors"
+                      [responsive]="vehicleStatusChart.responsive">
+                    </apx-chart>
+                  } @else {
+                    <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                      <p class="mb-0">Aucune donnée disponible</p>
+                    </div>
+                  }
+                </div>
+              </div>
+              <div class="card-footer bg-white border-top">
+                <div class="row text-center">
+                  <div class="col-6">
+                    <div class="h5 mb-0 fw-bold text-success">{{ availableVehiculesCount }}</div>
+                    <small class="text-muted">Fonctionnels</small>
+                  </div>
+                  <div class="col-6">
+                    <div class="h5 mb-0 fw-bold text-warning">{{ maintenanceVehiculesCount }}</div>
+                    <small class="text-muted">En Maintenance</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vehicle Type Chart -->
+          <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+              <div class="card-header bg-white border-bottom">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h5 class="card-title mb-1 fw-bold">Types de Véhicules</h5>
+                    <p class="text-muted small mb-0">Distribution par catégorie</p>
+                  </div>
+                  <button class="btn btn-outline-primary btn-sm" (click)="loadVehicules()" [disabled]="isLoading">
+                    <i class="bi bi-arrow-clockwise"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart-container" style="min-height: 300px;">
+                  @if (vehicleTypeChart && vehicleTypeChart.series && vehicleTypeChart.series.length > 0) {
+                    <apx-chart
+                      [series]="vehicleTypeChart.series"
+                      [chart]="vehicleTypeChart.chart"
+                      [plotOptions]="vehicleTypeChart.plotOptions"
+                      [dataLabels]="vehicleTypeChart.dataLabels"
+                      [xaxis]="vehicleTypeChart.xaxis"
+                      [yaxis]="vehicleTypeChart.yaxis"
+                      [colors]="vehicleTypeChart.colors"
+                      [responsive]="vehicleTypeChart.responsive">
+                    </apx-chart>
+                  } @else {
+                    <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                      <p class="mb-0">Aucune donnée disponible</p>
+                    </div>
+                  }
+                </div>
+              </div>
+              <div class="card-footer bg-white border-top">
+                <div class="row text-center">
+                  @for (type of vehiclesByType | keyvalue; track type.key) {
+                    <div class="col-6 col-md-4 mb-2">
+                      <div class="h6 mb-0 fw-bold">{{ type.value }}</div>
+                      <small class="text-muted">{{ type.key }}</small>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      }
     </div>
-    }
-  </div>
   }
 </div>

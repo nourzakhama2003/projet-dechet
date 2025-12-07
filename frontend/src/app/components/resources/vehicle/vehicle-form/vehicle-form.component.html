@@ -57,7 +57,7 @@
       <!-- Vehicle Type -->
       <div class="form-group">
         <label for="type" class="form-label"
-          > Vehicle Type <span class="required">*</span></label
+          >🚛 Vehicle Type <span class="required">*</span></label
         >
         <div class="custom-select-wrapper">
           <div
@@ -71,7 +71,20 @@
             >
               {{ selectedTypeName || "Select type" }}
             </span>
-          
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="dropdown-arrow"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2.5"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
           </div>
 
           <div class="custom-dropdown" *ngIf="showTypeDropdown">

@@ -287,7 +287,7 @@
               ? addIncident()
               : addNotification()
           "
-          class="btn"
+          class="btnc"
         >
           <!-- SVG avec taille fixe + centrage parfait -->
           <svg
@@ -302,7 +302,12 @@
             <path d="M12 5v14m-7-7h14" />
           </svg>
           <span>
-            @if (activeTab === 'users') { Add User } @else if (activeTab === 'containers') { Add Container } @else if (activeTab === 'pickuppoints') { Add Pickup Point } @else if (activeTab === 'vehicles') { Add Vehicle } @else if (activeTab === 'routes') { Add Route } @else if (activeTab === 'incidents') { Add Incident } @else if (activeTab === 'notifications') { Add Notification }
+            @if (activeTab === 'users') { Add User } @else if (activeTab ===
+            'containers') { Add Container } @else if (activeTab ===
+            'pickuppoints') { Add Pickup Point } @else if (activeTab ===
+            'vehicles') { Add Vehicle } @else if (activeTab === 'routes') { Add
+            Route } @else if (activeTab === 'incidents') { Add Incident } @else
+            { Add Notification }
           </span>
         </button>
       </div>
