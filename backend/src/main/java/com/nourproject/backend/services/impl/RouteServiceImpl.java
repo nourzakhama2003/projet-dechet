@@ -1,6 +1,8 @@
 package com.nourproject.backend.services.impl;
 
 import com.nourproject.backend.dtos.Response;
+import com.nourproject.backend.dtos.Notification.NotificationDto;
+import com.nourproject.backend.enums.NotificationType;
 import com.nourproject.backend.dtos.route.RouteDto;
 import com.nourproject.backend.dtos.route.RouteUpdateDto;
 import com.nourproject.backend.entities.Route;
@@ -24,6 +26,7 @@ public class RouteServiceImpl implements RouteService {
     private final com.nourproject.backend.repositories.PickUpPointRepository pickUpPointRepository;
     private final com.nourproject.backend.repositories.VehiculeRepository vehiculeRepository;
     private final com.nourproject.backend.repositories.UserRepository userRepository;
+    private final com.nourproject.backend.services.interfaces.NotificationService notificationService;
 
     @Override
     public Response findAll() {
@@ -274,6 +277,14 @@ public class RouteServiceImpl implements RouteService {
         if (routeUpdateDto.getUserIds() != null && !routeUpdateDto.getUserIds().isEmpty()) {
             System.out.println("Updating users with IDs: " + routeUpdateDto.getUserIds());
             List<com.nourproject.backend.entities.User> users = new java.util.ArrayList<>();
+            // Collect previous users to detect newly added users
+            List<String> prevUserIds = new java.util.ArrayList<>();
+            if (route.getUsers() != null) {
+                // Trigger lazy loading
+                route.getUsers().size();
+                route.getUsers().forEach(u -> prevUserIds.add(u.getId()));
+            }
+
             for (String userId : routeUpdateDto.getUserIds()) {
                 // Skip null or empty user IDs
                 if (userId != null && !userId.trim().isEmpty()) {
@@ -283,6 +294,47 @@ public class RouteServiceImpl implements RouteService {
                 }
             }
             route.setUsers(users);
+            // Detect newly added users and send notification email
+            List<String> newlyAdded = new java.util.ArrayList<>();
+            for (String uid : routeUpdateDto.getUserIds()) {
+                if (uid != null && !uid.trim().isEmpty()) {
+                    if (!prevUserIds.contains(uid)) newlyAdded.add(uid);
+                }
+            }
+            System.out.println("Previous user IDs: " + prevUserIds);
+            System.out.println("New user IDs: " + routeUpdateDto.getUserIds());
+            System.out.println("Newly added user IDs: " + newlyAdded);
+            
+            if (!newlyAdded.isEmpty()) {
+                System.out.println("Detected " + newlyAdded.size() + " newly added employee(s). Sending notifications...");
+                newlyAdded.forEach(nu -> {
+                    try {
+                        com.nourproject.backend.entities.User u = userRepository.findById(nu)
+                                .orElse(null);
+                        if (u != null && u.getEmail() != null && !u.getEmail().isEmpty()) {
+                            System.out.println("Preparing notification email for employee: " + u.getEmail());
+                            NotificationDto notificationDto = new NotificationDto();
+                            notificationDto.setRecipient(u.getEmail());
+                            notificationDto.setUserId(u.getId());
+                            notificationDto.setSubject("Assigned to a new route");
+                            String body = String.format("Hello %s,\n\nYou have been assigned to a route on %s.\n\nPlease check the system for details.\n\nBest regards,\nRoute Management System",
+                                    (u.getFirstName() != null ? u.getFirstName() : u.getUserName()),
+                                    route.getRouteDate() != null ? route.getRouteDate().toString() : "N/A");
+                            notificationDto.setBody(body);
+                            notificationDto.setNotificationType(NotificationType.assignment_notification);
+                            notificationService.save(notificationDto);
+                            System.out.println("Notification sent to: " + u.getEmail());
+                        } else {
+                            System.out.println("Warning: User " + nu + " has no email address or user not found");
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Error sending notification to user " + nu + ": " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                });
+            } else {
+                System.out.println("No newly added employees detected. All users were already assigned.");
+            }
         } else {
             // If userIds is empty or null, clear the users list
             route.setUsers(new java.util.ArrayList<>());

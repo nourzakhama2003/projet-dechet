@@ -30,14 +30,26 @@ public class NotificationServiceImpl implements NotificationService {
     public void sendEmail(NotificationDto notificationDto) {
         try {
             SimpleMailMessage mail = new SimpleMailMessage();
+            mail.setFrom("nourzakhma@gmail.com");
             mail.setTo(notificationDto.getRecipient());
             mail.setSubject(notificationDto.getSubject());
             mail.setText(notificationDto.getBody());
+            log.info("Attempting to send email to: {}", notificationDto.getRecipient());
             mailSender.send(mail);
             log.info("Email sent successfully to: {}", notificationDto.getRecipient());
-            notificationRepository.save(notificationMapper.toEntity(notificationDto));
+            // Update notification status if needed
+            Notification notification = notificationMapper.toEntity(notificationDto);
+            notificationRepository.save(notification);
         } catch (Exception e) {
-            log.error("Failed to send email to: {}", notificationDto.getRecipient(), e);
+            log.error("Failed to send email to: {}. Error: {}", notificationDto.getRecipient(), e.getMessage(), e);
+            // Still save the notification even if email fails
+            try {
+                Notification notification = notificationMapper.toEntity(notificationDto);
+                notificationRepository.save(notification);
+                log.info("Notification saved to database despite email failure for: {}", notificationDto.getRecipient());
+            } catch (Exception saveException) {
+                log.error("Failed to save notification after email failure: {}", saveException.getMessage());
+            }
         }
     }
 

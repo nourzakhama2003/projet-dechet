@@ -145,6 +145,9 @@ export class RouteDetailsComponent implements OnInit {
             // Always send userIds array (can be empty to clear, or have IDs to set)
             const userIds = this.formGroup.value.userIds || [];
             updateData.userIds = userIds;
+            // Determine newly added users compared to original route data
+            const prevUserIds = (this.data.users || []).map((u: any) => u.id || u._id);
+            const newlyAddedUserIds = userIds.filter((id: string) => !prevUserIds.includes(id));
 
             console.log('Sending update data:', updateData);
             console.log('Selected vehicle:', this.selectedVehicle);
@@ -166,6 +169,9 @@ export class RouteDetailsComponent implements OnInit {
                     // Close dropdown if open
                     this.showVehicleDropdown = false;
                     this.showUsersDropdown = false;
+                    if (newlyAddedUserIds && newlyAddedUserIds.length > 0) {
+                        this.toastService.showSuccess(`${newlyAddedUserIds.length} employee(s) notified by email`);
+                    }
                 },
                 error: (error: any) => {
                     console.error('Error updating route:', error);

@@ -62,7 +62,7 @@ public class User {
     private LocalDateTime updatedAt;
 
 
-    @DocumentReference(lazy = true)
+
     @Field("vehicules")
     private List<VehiculeType> vehicules ;
 
