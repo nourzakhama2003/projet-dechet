@@ -6,10 +6,10 @@
         <div>
           <h1 class="h3 mb-1 fw-bold">
             <i class="bi bi-speedometer2 text-primary me-2"></i>
-            Tableau de Bord
+            Dashboard
           </h1>
           <p class="text-muted mb-0">
-            Vue d'ensemble du système de gestion des déchets
+           Overview of the waste management system
             <span class="badge bg-success-subtle text-success ms-2">
               <i class="bi bi-broadcast"></i> En direct
             </span>
@@ -17,7 +17,7 @@
         </div>
         <button class="btn btn-primary" (click)="loadAllData()" [disabled]="isLoading">
           <i class="bi bi-arrow-clockwise"></i>
-          Actualiser
+       Refresh
         </button>
       </div>
     </div>
@@ -27,9 +27,9 @@
   <div class="card shadow-sm">
     <div class="card-body text-center py-5">
       <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Chargement...</span>
+        <span class="visually-hidden">Loading...</span>
       </div>
-      <p class="mt-3 text-muted fw-medium">Chargement des données...</p>
+      <p class="mt-3 text-muted fw-medium">Loading data...</p>
     </div>
   </div>
   } @else if (errorMessage) {
@@ -50,9 +50,9 @@
               </div>
               <div class="flex-grow-1">
                 <div class="h2 mb-0 fw-bold">{{ users.length }}</div>
-                <div class="text-muted small">Utilisateurs</div>
+                <div class="text-muted small">Users</div>
                 <div class="text-success small mt-1 fw-semibold">
-                  <i class="bi bi-check-circle-fill"></i> {{ activeUsersCount }} actifs
+                  <i class="bi bi-check-circle-fill"></i> {{ activeUsersCount }} active
                 </div>
               </div>
             </div>
@@ -69,9 +69,9 @@
               </div>
               <div class="flex-grow-1">
                 <div class="h2 mb-0 fw-bold">{{ vehicules.length }}</div>
-                <div class="text-muted small">Véhicules</div>
+                <div class="text-muted small">VVehicles</div>
                 <div class="text-success small mt-1 fw-semibold">
-                  <i class="bi bi-check-circle-fill"></i> {{ availableVehiculesCount }} disponibles
+                  <i class="bi bi-check-circle-fill"></i> {{ availableVehiculesCount }} available
                 </div>
               </div>
             </div>
@@ -88,9 +88,9 @@
               </div>
               <div class="flex-grow-1">
                 <div class="h2 mb-0 fw-bold">{{ containers.length }}</div>
-                <div class="text-muted small">Conteneurs</div>
+                <div class="text-muted small">Containers</div>
                 <div class="text-success small mt-1 fw-semibold">
-                  <i class="bi bi-check-circle-fill"></i> {{ functionalContainersCount }} fonctionnels
+                  <i class="bi bi-check-circle-fill"></i> {{ functionalContainersCount }} functional
                 </div>
               </div>
             </div>
@@ -109,7 +109,7 @@
                 <div class="h2 mb-0 fw-bold">{{ incidents.length }}</div>
                 <div class="text-muted small">Incidents</div>
                 <div class="text-danger small mt-1 fw-semibold">
-                  <i class="bi bi-exclamation-circle-fill"></i> {{ highPriorityIncidentsCount }} haute priorité
+                  <i class="bi bi-exclamation-circle-fill"></i> {{ highPriorityIncidentsCount }} high priority
                 </div>
               </div>
             </div>
@@ -122,7 +122,7 @@
     <div class="mb-4">
       <h2 class="h4 fw-bold mb-4">
         <i class="bi bi-bar-chart-line text-primary me-2"></i>
-        Analyses Visuelles
+       Visual Analytics
       </h2>
 
       <div class="row g-4">
@@ -134,9 +134,9 @@
                 <div>
                   <h5 class="card-title mb-1 fw-bold text-danger">
                     <i class="bi bi-speedometer2 me-2"></i>
-                    Niveau de Danger - Incidents
+                   Danger Level – Incidents
                   </h5>
-                  <p class="text-danger small mb-0 fw-medium">Jauge de criticité - Intervention immédiate si zone rouge</p>
+                  <p class="text-danger small mb-0 fw-medium">Criticality Gauge – Immediate intervention if in the red zone</p>
                 </div>
                 <button class="btn btn-outline-danger btn-sm" (click)="loadIncidents()" [disabled]="isLoading">
                   <i class="bi bi-arrow-clockwise"></i>
@@ -159,8 +159,8 @@
                 <div class="d-flex align-items-center justify-content-center h-100 text-muted">
                   <div class="text-center">
                     <i class="bi bi-check-circle fs-1 text-success mb-2"></i>
-                    <p class="mb-0 fw-semibold">Aucun incident signalé</p>
-                    <p class="small text-muted">Système opérationnel</p>
+                    <p class="mb-0 fw-semibold">No incidents reported</p>
+                    <p class="small text-muted">System operational</p>
                   </div>
                 </div>
                 }
@@ -168,7 +168,7 @@
               <!-- Danger Level Indicator -->
               <div class="text-center mt-3">
                   <span class="badge {{ incidentDangerColor }} fs-6 fw-bold px-3 py-2">
-                    🚨 NIVEAU: {{ incidentDangerLevel }} ({{ incidentDangerPercentage }}%)
+                    🚨 LEVEL: {{ incidentDangerLevel }} ({{ incidentDangerPercentage }}%)
                   </span>
               </div>
             </div>
@@ -176,27 +176,27 @@
               <div class="row text-center g-2">
                 <div class="col-4 col-md-2">
                   <div class="h5 mb-0 fw-bold text-danger">{{ urgentIncidentsCount }}</div>
-                  <small class="text-danger fw-medium d-block">Urgents</small>
+                  <small class="text-danger fw-medium d-block">Urgent</small>
                 </div>
                 <div class="col-4 col-md-2">
                   <div class="h5 mb-0 fw-bold text-warning">{{ highPriorityIncidentsCount }}</div>
-                  <small class="text-warning fw-medium d-block">Haute</small>
+                  <small class="text-warning fw-medium d-block">High</small>
                 </div>
                 <div class="col-4 col-md-2">
                   <div class="h5 mb-0 fw-bold text-info">{{ mediumPriorityIncidentsCount }}</div>
-                  <small class="text-info fw-medium d-block">Moyenne</small>
+                  <small class="text-info fw-medium d-block">Medium</small>
                 </div>
                 <div class="col-4 col-md-2">
                   <div class="h5 mb-0 fw-bold text-secondary">{{ lowPriorityIncidentsCount }}</div>
-                  <small class="text-secondary fw-medium d-block">Faible</small>
+                  <small class="text-secondary fw-medium d-block">Low</small>
                 </div>
                 <div class="col-4 col-md-2">
                   <div class="h5 mb-0 fw-bold text-muted">{{ inProgressIncidentsCount }}</div>
-                  <small class="text-muted fw-medium d-block">En cours</small>
+                  <small class="text-muted fw-medium d-block">In Progress</small>
                 </div>
                 <div class="col-4 col-md-2">
                   <div class="h5 mb-0 fw-bold text-success">{{ resolvedIncidentsCount }}</div>
-                  <small class="text-success fw-medium d-block">Résolus</small>
+                  <small class="text-success fw-medium d-block">Resolved</small>
                 </div>
               </div>
             </div>
@@ -211,9 +211,9 @@
                 <div>
                   <h5 class="card-title mb-1 fw-bold">
                     <i class="bi bi-pie-chart text-primary me-2"></i>
-                    Statut des Conteneurs
+                    Container Status
                   </h5>
-                  <p class="text-muted small mb-0">Répartition fonctionnel / non-fonctionnel</p>
+                  <p class="text-muted small mb-0">Functional / Non-functional Distribution</p>
                 </div>
                 <button class="btn btn-outline-primary btn-sm" (click)="loadContainers()" [disabled]="isLoading">
                   <i class="bi bi-arrow-clockwise"></i>
@@ -235,7 +235,7 @@
                 <div class="d-flex align-items-center justify-content-center h-100 text-muted">
                   <div class="text-center">
                     <i class="bi bi-inbox fs-1 mb-2"></i>
-                    <p class="mb-0 fw-semibold">Aucune donnée disponible</p>
+                    <p class="mb-0 fw-semibold">No data available</p>
                   </div>
                 </div>
                 }
@@ -245,11 +245,11 @@
               <div class="row text-center">
                 <div class="col-6">
                   <div class="h5 mb-0 fw-bold text-success">{{ functionalContainersCount }}</div>
-                  <small class="text-muted fw-medium">Fonctionnels</small>
+                  <small class="text-muted fw-medium">Functional</small>
                 </div>
                 <div class="col-6">
                   <div class="h5 mb-0 fw-bold text-danger">{{ nonFunctionalContainersCount }}</div>
-                  <small class="text-muted fw-medium">Non-fonctionnels</small>
+                  <small class="text-muted fw-medium">Non-functional</small>
                 </div>
               </div>
             </div>
@@ -264,9 +264,9 @@
                 <div>
                   <h5 class="card-title mb-1 fw-bold">
                     <i class="bi bi-box-seam text-primary me-2"></i>
-                    Types de Conteneurs
+                    Container Types
                   </h5>
-                  <p class="text-muted small mb-0">Distribution par catégorie</p>
+                  <p class="text-muted small mb-0">Distribution by category</p>
                 </div>
                 <button class="btn btn-outline-primary btn-sm" (click)="loadContainers()" [disabled]="isLoading">
                   <i class="bi bi-arrow-clockwise"></i>
@@ -289,7 +289,7 @@
                 <div class="d-flex align-items-center justify-content-center h-100 text-muted">
                   <div class="text-center">
                     <i class="bi bi-inbox fs-1 mb-2"></i>
-                    <p class="mb-0 fw-semibold">Aucune donnée disponible</p>
+                    <p class="mb-0 fw-semibold">No data available</p>
                   </div>
                 </div>
                 }
@@ -316,9 +316,9 @@
                 <div>
                   <h5 class="card-title mb-1 fw-bold">
                     <i class="bi bi-graph-up text-primary me-2"></i>
-                    Niveaux de Remplissage
+                    Fill Levels
                   </h5>
-                  <p class="text-muted small mb-0">Répartition par niveau de remplissage</p>
+                  <p class="text-muted small mb-0">Distribution by fill level</p>
                 </div>
                 <button class="btn btn-outline-primary btn-sm" (click)="loadContainers()" [disabled]="isLoading">
                   <i class="bi bi-arrow-clockwise"></i>
@@ -344,7 +344,7 @@
                 <div class="d-flex align-items-center justify-content-center h-100 text-muted">
                   <div class="text-center">
                     <i class="bi bi-inbox fs-1 mb-2"></i>
-                    <p class="mb-0 fw-semibold">Aucune donnée disponible</p>
+                    <p class="mb-0 fw-semibold">No data available</p>
                   </div>
                 </div>
                 }
@@ -354,19 +354,19 @@
               <div class="row text-center">
                 <div class="col-6 col-md-3">
                   <div class="h5 mb-0 fw-bold text-success">{{ containerFillLevels.low }}</div>
-                  <small class="text-muted fw-medium d-block">Bas (&lt;40%)</small>
+                  <small class="text-muted fw-medium d-block">Low (&lt;40%)</small>
                 </div>
                 <div class="col-6 col-md-3">
                   <div class="h5 mb-0 fw-bold text-warning">{{ containerFillLevels.medium }}</div>
-                  <small class="text-muted fw-medium d-block">Moyen (40-69%)</small>
+                  <small class="text-muted fw-medium d-block">Medium (40-69%)</small>
                 </div>
                 <div class="col-6 col-md-3">
                   <div class="h5 mb-0 fw-bold text-orange">{{ containerFillLevels.high }}</div>
-                  <small class="text-muted fw-medium d-block">Élevé (70-89%)</small>
+                  <small class="text-muted fw-medium d-block">High (70-89%)</small>
                 </div>
                 <div class="col-6 col-md-3">
                   <div class="h5 mb-0 fw-bold text-danger">{{ containerFillLevels.critical }}</div>
-                  <small class="text-muted fw-medium d-block">Critique (≥90%)</small>
+                  <small class="text-muted fw-medium d-block">Critical (≥90%)</small>
                 </div>
               </div>
             </div>
@@ -379,7 +379,7 @@
     <div class="mb-4">
       <h2 class="h4 fw-bold mb-4">
         <i class="bi bi-truck text-primary me-2"></i>
-        Analyses des Véhicules
+        Vehicle Analytics
       </h2>
 
       <div class="row g-4">
@@ -391,9 +391,9 @@
                 <div>
                   <h5 class="card-title mb-1 fw-bold">
                     <i class="bi bi-speedometer text-primary me-2"></i>
-                    Statut des Véhicules
+                    Vehicle Status
                   </h5>
-                  <p class="text-muted small mb-0">Répartition fonctionnel / en maintenance</p>
+                  <p class="text-muted small mb-0">Functional / Under Maintenance Distribution</p>
                 </div>
                 <button class="btn btn-outline-primary btn-sm" (click)="loadVehicules()" [disabled]="isLoading">
                   <i class="bi bi-arrow-clockwise"></i>
@@ -415,7 +415,7 @@
                 <div class="d-flex align-items-center justify-content-center h-100 text-muted">
                   <div class="text-center">
                     <i class="bi bi-truck fs-1 mb-2"></i>
-                    <p class="mb-0 fw-semibold">Aucune donnée disponible</p>
+                    <p class="mb-0 fw-semibold">No data available</p>
                   </div>
                 </div>
                 }
@@ -425,11 +425,11 @@
               <div class="row text-center">
                 <div class="col-6">
                   <div class="h5 mb-0 fw-bold text-success">{{ availableVehiculesCount }}</div>
-                  <small class="text-muted fw-medium">Fonctionnels</small>
+                  <small class="text-muted fw-medium">Functional</small>
                 </div>
                 <div class="col-6">
                   <div class="h5 mb-0 fw-bold text-warning">{{ maintenanceVehiculesCount }}</div>
-                  <small class="text-muted fw-medium">En Maintenance</small>
+                  <small class="text-muted fw-medium">Under Maintenance</small>
                 </div>
               </div>
             </div>
@@ -444,9 +444,9 @@
                 <div>
                   <h5 class="card-title mb-1 fw-bold">
                     <i class="bi bi-collection text-primary me-2"></i>
-                    Types de Véhicules
+                    Vehicle Types
                   </h5>
-                  <p class="text-muted small mb-0">Distribution par catégorie</p>
+                  <p class="text-muted small mb-0">Category Distribution</p>
                 </div>
                 <button class="btn btn-outline-primary btn-sm" (click)="loadVehicules()" [disabled]="isLoading">
                   <i class="bi bi-arrow-clockwise"></i>
@@ -470,7 +470,7 @@
                 <div class="d-flex align-items-center justify-content-center h-100 text-muted">
                   <div class="text-center">
                     <i class="bi bi-truck fs-1 mb-2"></i>
-                    <p class="mb-0 fw-semibold">Aucune donnée disponible</p>
+                    <p class="mb-0 fw-semibold">No data available</p>
                   </div>
                 </div>
                 }
