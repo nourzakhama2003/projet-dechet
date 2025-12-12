@@ -59,7 +59,7 @@ export class CitizenComponent implements OnInit, OnDestroy {
             },
             error: (error) => {
                 console.error('Error loading pickup points:', error);
-                this.errorMessage = 'Erreur lors du chargement des points de collecte';
+                this.errorMessage = 'Error loading pickup points';
             }
         });
 
@@ -73,7 +73,7 @@ export class CitizenComponent implements OnInit, OnDestroy {
             },
             error: (error) => {
                 console.error('Error loading routes:', error);
-                this.errorMessage = 'Erreur lors du chargement des données';
+                this.errorMessage = 'Error loading data';
                 this.isLoading = false;
             }
         });

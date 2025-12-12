@@ -1,8 +1,9 @@
 <div class="flex h-screen bg-gray-50 font-sans overflow-hidden">
   <!-- Sidebar -->
-  <div class="realtive">
-    <button class="absolute left-2 mt-2" (click)="show()">
-      @if(!sidebarOpen){<svg
+  <div class="relative">
+    <button class="absolute left-2 mt-2 z-50" (click)="show()">
+      @if(!sidebarOpen){
+      <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
         height="24"
@@ -16,8 +17,10 @@
       >
         <path d="M4 5h16" />
         <path d="M4 12h16" />
-        <path d="M4 19h16" /></svg
-      >}@else{<svg
+        <path d="M4 19h16" />
+      </svg>
+      }@else{
+      <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
         height="24"
@@ -30,8 +33,9 @@
         class="lucide lucide-x-icon lucide-x hover:text-red-500 hover:rotate-45 transition-transform duration-300"
       >
         <path d="M18 6 6 18" />
-        <path d="m6 6 12 12" /></svg
-      >}
+        <path d="m6 6 12 12" />
+      </svg>
+      }
     </button>
     @if(sidebarOpen) {
     <aside
@@ -41,7 +45,7 @@
         class="p-6 flex items-center justify-center border-b border-gray-100"
       >
         <h1
-          class="text-2xl font-bold bg-clip-text text-transparent bg-blue-500 tracking-tight"
+          class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-emerald-600 tracking-tight"
         >
           Admin Panel
         </h1>
@@ -269,7 +273,7 @@
         </h2>
         <p class="text-gray-500 mt-1">Manage your resources efficiently.</p>
       </div>
-      <!-- Add Action Button (Optional) -->
+      <!-- Add Action Button -->
       <div class="inline-flex justify-between items-center gap-6">
         <button
           (click)="
@@ -289,7 +293,6 @@
           "
           class="btnc"
         >
-          <!-- SVG avec taille fixe + centrage parfait -->
           <svg
             class="btnsvg"
             viewBox="0 0 24 24"
@@ -367,7 +370,7 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0121 18.382V7.618a1 1 0 01-.806-.984A10.001 10.001 0 018.022 16.697L9 20zm3-13v6m0 0l3-3m-3 3l-3-3"
+                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 01-.806-.984A10.001 10.001 0 018.022 16.697L9 20zm3-13v6m0 0l3-3m-3 3l-3-3"
               />
             </svg>
             Interactive Map
@@ -427,11 +430,11 @@
                 ></path>
               </svg>
               {{
-                mapComponent.isDuplicateRoute
-                  ? "Route Exists"
-                  : mapComponent.duplicateCheckLoading
-                  ? "Checking..."
-                  : "Create Route"
+              mapComponent.isDuplicateRoute
+              ? "Route Exists"
+              : mapComponent.duplicateCheckLoading
+              ? "Checking..."
+              : "Create Route"
               }}
             </button>
             <button

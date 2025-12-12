@@ -34,9 +34,9 @@ export class FooterComponent {
 
       // Reset form after submission
       this.resetForm();
-      alert('Merci ! Votre message a été envoyé avec succès.');
+      alert('Thank you! Your message has been sent successfully.');
     } else {
-      alert('Veuillez remplir tous les champs du formulaire.');
+      alert('Please fill in all form fields.');
     }
   }
 

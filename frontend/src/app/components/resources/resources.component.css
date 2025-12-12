@@ -1,0 +1,487 @@
+/* ============================================ */
+/*         CUSTOM SCROLLBAR STYLING            */
+/* ============================================ */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #10b981, #059669);
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #059669, #047857);
+}
+
+/* ============================================ */
+/*            SIDEBAR ANIMATIONS               */
+/* ============================================ */
+aside {
+  animation: slideIn 0.3s ease-out;
+  height: 100vh;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ============================================ */
+/*          PRIMARY BUTTON STYLES              */
+/* ============================================ */
+.btnc {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2),
+              0 2px 4px -1px rgba(16, 185, 129, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btnc::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.btnc:hover::before {
+  left: 100%;
+}
+
+.btnc:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3),
+              0 4px 6px -2px rgba(16, 185, 129, 0.2);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+.btnc:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+}
+
+.btnsvg {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+/* ============================================ */
+/*         MENU TOGGLE BUTTON STYLES           */
+/* ============================================ */
+.absolute.left-2 button {
+  z-index: 20;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.absolute.left-2 button:hover {
+  background: #f9fafb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================ */
+/*         SIDEBAR NAVIGATION STYLES           */
+/* ============================================ */
+nav button {
+  position: relative;
+  overflow: hidden;
+}
+
+nav button::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  background: linear-gradient(180deg, #10b981, #059669);
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
+
+nav button:hover::before,
+nav button.bg-gray-100::before {
+  transform: scaleY(1);
+}
+
+nav button svg {
+  transition: transform 0.3s ease;
+}
+
+nav button:hover svg {
+  transform: scale(1.1);
+}
+
+/* ============================================ */
+/*           HEADER SECTION STYLES             */
+/* ============================================ */
+header {
+  animation: fadeInDown 0.5s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+header h2 {
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================ */
+/*            CONTENT CARDS STYLES             */
+/* ============================================ */
+.bg-white.rounded-2xl {
+  transition: all 0.3s ease;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bg-white.rounded-2xl:hover {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
+              0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* ============================================ */
+/*           LOADING ANIMATION                 */
+/* ============================================ */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* ============================================ */
+/*            MAP SECTION STYLES               */
+/* ============================================ */
+.h-\[500px\] {
+  transition: all 0.3s ease;
+  border-radius: 0 0 1rem 1rem;
+  overflow: hidden;
+}
+
+/* ============================================ */
+/*          ADMIN PROFILE STYLES               */
+/* ============================================ */
+.p-4.border-t .flex {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.p-4.border-t .flex:hover {
+  background: #f3f4f6;
+}
+
+.w-8.h-8.rounded-full {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  transition: all 0.3s ease;
+}
+
+.p-4.border-t .flex:hover .w-8.h-8.rounded-full {
+  transform: scale(1.1);
+  box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+}
+
+/* ============================================ */
+/*         TOGGLE MAP BUTTON STYLES            */
+/* ============================================ */
+.text-green-600.hover\:text-green-800 {
+  position: relative;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.text-green-600.hover\:text-green-800::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #10b981, #059669);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.text-green-600.hover\:text-green-800:hover::after {
+  width: 80%;
+}
+
+.text-green-600.hover\:text-green-800:hover {
+  background: #f0fdf4;
+}
+
+/* ============================================ */
+/*        CREATE ROUTE BUTTON STYLES           */
+/* ============================================ */
+button.px-4.py-2.bg-green-600 {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+button.px-4.py-2.bg-green-600::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+button.px-4.py-2.bg-green-600:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+button.px-4.py-2.bg-green-600:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(16, 185, 129, 0.3);
+}
+
+/* ============================================ */
+/*          SECTION TITLES STYLES              */
+/* ============================================ */
+.p-6.border-b h3 {
+  position: relative;
+  padding-left: 1rem;
+}
+
+.p-6.border-b h3::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 70%;
+  background: linear-gradient(180deg, #10b981, #059669);
+  border-radius: 2px;
+}
+
+/* ============================================ */
+/*           RESPONSIVE DESIGN                 */
+/* ============================================ */
+@media (max-width: 768px) {
+  aside {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 30;
+  }
+
+  .absolute.left-2 {
+    z-index: 40;
+  }
+
+  main {
+    padding: 1rem;
+  }
+
+  header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .btnc {
+    width: 100%;
+  }
+}
+
+/* ============================================ */
+/*         SMOOTH TRANSITIONS GLOBAL           */
+/* ============================================ */
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* ============================================ */
+/*            FOCUS STATES                     */
+/* ============================================ */
+button:focus-visible {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
+}
+
+/* ============================================ */
+/*           DISABLED STATE                    */
+/* ============================================ */
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+button.cursor-not-allowed {
+  pointer-events: none;
+}
+
+/* ============================================ */
+/*          ICON ANIMATIONS                    */
+/* ============================================ */
+svg {
+  transition: all 0.3s ease;
+}
+
+button:hover svg:not(.animate-spin) {
+  transform: scale(1.05);
+}
+
+/* ============================================ */
+/*           GRADIENT TEXT                     */
+/* ============================================ */
+.bg-clip-text {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ============================================ */
+/*      BACKDROP BLUR FOR MOBILE MENU          */
+/* ============================================ */
+@media (max-width: 768px) {
+  aside::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+    backdrop-filter: blur(4px);
+  }
+}
+
+/* ============================================ */
+/*         ADDITIONAL ENHANCEMENTS             */
+/* ============================================ */
+
+/* Pulse animation for loading state */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Card hover effect enhancement */
+.bg-white.rounded-2xl {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced focus ring */
+*:focus-visible {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+/* Improve button press effect */
+button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Selection color */
+::selection {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+::-moz-selection {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+/* Skeleton loading animation (if needed) */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton {
+  animation: shimmer 2s infinite;
+  background: linear-gradient(
+    to right,
+    #f0f0f0 0%,
+    #e0e0e0 20%,
+    #f0f0f0 40%,
+    #f0f0f0 100%
+  );
+  background-size: 1000px 100%;
+}

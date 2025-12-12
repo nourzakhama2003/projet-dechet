@@ -3,7 +3,7 @@
   <div class="citizen-header">
     <div class="header-content">
       <h1>🏠 Espace Citoyen</h1>
-      <p>Suivez la collecte des déchets dans votre quartier</p>
+      <p>Track waste collection in your neighborhood</p>
     </div>
   </div>
 
@@ -11,7 +11,7 @@
   @if (isLoading) {
   <div class="loading-container">
     <div class="spinner"></div>
-    <p>Chargement des données...</p>
+    <p>Loading data...</p>
   </div>
   }
 
@@ -19,7 +19,7 @@
   @if (errorMessage && !isLoading) {
   <div class="error-container">
     <p class="error-message">{{ errorMessage }}</p>
-    <button class="btn-retry" (click)="loadData()">Réessayer</button>
+    <button class="btn-retry" (click)="loadData()">Retry</button>
   </div>
   }
 
@@ -121,7 +121,7 @@
             </h3>
             <div class="route-details">
               @if (route.startTime) {
-              <span class="route-time">⏰ Début: {{ route.startTime }}</span>
+              <span class="route-time">⏰ Start: {{ route.startTime }}</span>
               } @if (route.endTime) {
               <span class="route-time">⏰ Fin: {{ route.endTime }}</span>
               } @if (route.status) {
@@ -134,7 +134,7 @@
       </div>
       } @else {
       <div class="empty-state">
-        <p>Aucune collecte programmée</p>
+        <p>No scheduled collection</p>
       </div>
       }
     </div>
@@ -144,11 +144,11 @@
       <div class="info-card">
         <h3>ℹ️ Informations Importantes</h3>
         <ul>
-          <li>Les collectes ont lieu selon le calendrier affiché ci-dessus</li>
+          <li>Collections occur according to the schedule displayed above</li>
           <li>
-            Veuillez trier vos déchets selon les types de conteneurs disponibles
+            Please sort your waste according to available container types
           </li>
-          <li>Les conteneurs pleins sont collectés en priorité</li>
+          <li>Full containers are collected first</li>
           <li>Pour toute question, contactez le service municipal</li>
         </ul>
       </div>
@@ -159,7 +159,7 @@
           <div class="sort-item">
             <span class="sort-icon">📦</span>
             <span class="sort-text"
-              ><strong>Carton:</strong> Boîtes, emballages</span
+              ><strong>Cardboard:</strong> Boxes, packaging</span
             >
           </div>
           <div class="sort-item">
