@@ -1,6 +1,5 @@
 package com.nourproject.backend.services.impl;
 
-import com.mongodb.DuplicateKeyException;
 import com.nourproject.backend.dtos.Response;
 import com.nourproject.backend.dtos.user.UserDto;
 import com.nourproject.backend.dtos.user.UserUpdateDto;
@@ -16,9 +15,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+// import com.mongodb.DuplicateKeyException; // Unused import
+// import java.time.LocalDateTime; // Unused import
 import java.util.List;
-import java.util.stream.Collectors;
+// import java.util.stream.Collectors; // Unused import
 
 @Service
 @RequiredArgsConstructor

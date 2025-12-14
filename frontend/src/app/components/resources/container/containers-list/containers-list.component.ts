@@ -7,7 +7,7 @@ import { ContainerCardComponent } from '../container-card/container-card.compone
   standalone: true,
   imports: [CommonModule, ContainerCardComponent],
   templateUrl: './containers-list.component.html',
-  styleUrl: './containers-list.component.css'
+  styleUrls: ['./containers-list.component.css']
 })
 export class ContainersListComponent {
   @Input() containers: any[] = [];

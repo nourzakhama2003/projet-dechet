@@ -3,7 +3,7 @@ package com.nourproject.backend.services.interfaces;
 import com.nourproject.backend.dtos.Response;
 import com.nourproject.backend.dtos.pickuppoint.PickUpPointDto;
 import com.nourproject.backend.dtos.pickuppoint.PickUpPointUpdateDto;
-import com.nourproject.backend.entities.PickUpPoint;
+// import com.nourproject.backend.entities.PickUpPoint; // Unused import removed
 
 public interface PickUpPointService {
 

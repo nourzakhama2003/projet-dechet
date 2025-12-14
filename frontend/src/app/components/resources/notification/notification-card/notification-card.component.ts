@@ -6,15 +6,15 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './notification-card.component.html',
-  styleUrl: './notification-card.component.css'
+  styleUrls: ['./notification-card.component.css']
 })
 export class NotificationCardComponent {
   @Input() notification: any;
-  @Output() onEdit = new EventEmitter<any>();
+  @Output() onView = new EventEmitter<any>();
   @Output() onDelete = new EventEmitter<any>();
 
-  edit() {
-    this.onEdit.emit(this.notification);
+  view() {
+    this.onView.emit(this.notification);
   }
 
   delete() {

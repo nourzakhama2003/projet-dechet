@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './vehicle-card.component.html',
-  styleUrl: './vehicle-card.component.css'
+  styleUrls: ['./vehicle-card.component.css']
 })
 export class VehicleCardComponent {
   @Input() vehicle: any;

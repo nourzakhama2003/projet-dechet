@@ -1,23 +1,22 @@
-FROM node:25-alpine AS build
+FROM node:20 AS build
+WORKDIR /app
 
-ARG API_URL='http://localhost:8082/api'
-ARG KEYCLOAK_URL='http://localhost:8080'
-ARG KEYCLOAK_REALM='dechetrealm'
-ARG KEYCLOAK_CLIENT_ID='dechet-frontend'
-ENV  API_URL=${API_URL}
+ARG ENVIRONMENT=production
+ARG API_URL=https://dechet.46.lebondeveloppeur.net/api
+ARG KEYCLOAK_URL=https://dechet.46.lebondeveloppeur.net
 ENV ENVIRONMENT=${ENVIRONMENT}
-ENV KEYCLOAK_REALM=${KEYCLOAK_REALM}
-ENV KEYCLOAK_CLIENT_ID=${KEYCLOAK_CLIENT_ID}
-WORKDIR /build 
-COPY package*.json .
-RUN npm install --force 
+ENV API_URL=${API_URL}
+ENV KEYCLOAK_URL=${KEYCLOAK_URL}
+
+COPY package*.json ./
+RUN npm ci --force
+
 COPY . .
-RUN npm run build 
+RUN npm run build -- --configuration=${ENVIRONMENT}
 
+FROM nginx:alpine-slim
+COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf   
 
-FROM nginx AS runtime 
-WORKDIR /usr/share/nginx/html
-COPY --from=build /build/dist/frontend/browser .
-COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

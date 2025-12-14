@@ -3,7 +3,7 @@ package com.nourproject.backend.dtos.vehicule;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.nourproject.backend.entities.User;
-import com.nourproject.backend.enums.UserRole;
+// import com.nourproject.backend.enums.UserRole; // Unused
 import com.nourproject.backend.enums.VehiculeStatus;
 import com.nourproject.backend.enums.VehiculeType;
 import lombok.AllArgsConstructor;

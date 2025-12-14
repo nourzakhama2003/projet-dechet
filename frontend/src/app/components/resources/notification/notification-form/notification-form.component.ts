@@ -13,7 +13,7 @@ import { AppResponse } from '../../../../models/AppResponse';
     standalone: true,
     imports: [CommonModule, ReactiveFormsModule, MatDialogModule],
     templateUrl: './notification-form.component.html',
-    styleUrl: './notification-form.component.css'
+    styleUrls: ['./notification-form.component.css']
 })
 export class NotificationFormComponent implements OnInit {
     formGroup!: FormGroup;
@@ -68,7 +68,8 @@ export class NotificationFormComponent implements OnInit {
             notificationType: [this.data.notificationType || 'incident_notification', Validators.required],
             userId: [this.data.userId || ''],
             containerId: [this.data.containerId || ''],
-            incidentId: [this.data.incidentId || '']
+            incidentId: [this.data.incidentId || ''],
+            routeId: [this.data.routeId || '']
         });
     }
 

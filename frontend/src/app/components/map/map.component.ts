@@ -9,6 +9,7 @@ import { RouteStatus } from '../../models/enums/RouteStatus';
 import * as L from 'leaflet';
 import { AppResponse } from '../../models/AppResponse';
 import { ToastService } from '../../services/toast.service';
+import { ActivatedRoute } from '@angular/router';
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -22,12 +23,13 @@ L.Icon.Default.mergeOptions({
   standalone: true,
   imports: [CommonModule],
   templateUrl: './map.component.html',
-  styleUrl: './map.component.css',
+  styleUrls: ['./map.component.css'],
 })
 export class MapComponent implements AfterViewInit {
   private map!: L.Map;
   private routeLayer: L.Polyline | null = null;
   optimizedRouteData: Route | null = null; // Store optimized route without saving
+  viewRoute: Route | null = null; // Route loaded by id for viewing
   isDuplicateRoute: boolean = false;
   duplicateCheckLoading: boolean = false;
 
@@ -45,11 +47,17 @@ export class MapComponent implements AfterViewInit {
     private pickUpPointService: PickUpPointService,
     private routeService: RouteService,
     private toastService: ToastService
+    , private activatedRoute: ActivatedRoute
   ) { }
 
   ngAfterViewInit(): void {
     this.initMap();
     this.loadPickupPoints();
+    // If routeId provided in route param or query param, load route details
+    const routeId = this.activatedRoute.snapshot.paramMap.get('routeId') || this.activatedRoute.snapshot.queryParamMap.get('routeId');
+    if (routeId) {
+      this.loadRouteDetails(routeId);
+    }
   }
 
   private initMap(): void {
@@ -71,6 +79,8 @@ export class MapComponent implements AfterViewInit {
       return div;
     };
     legend.addTo(this.map);
+    // fix display size after initial render
+    setTimeout(() => { this.map.invalidateSize(); }, 200);
   }
 
   private loadPickupPoints(): void {
@@ -248,6 +258,64 @@ export class MapComponent implements AfterViewInit {
     }
   }
 
+  private loadRouteDetails(routeId: string): void {
+    this.routeService.getById(routeId).subscribe({
+      next: (res: AppResponse) => {
+        if (res && res.route) {
+          this.viewRoute = res.route;
+          // Render this route onto the map
+          this.renderRoute(this.viewRoute);
+        }
+      },
+      error: (err) => {
+        console.error('Failed to load route:', err);
+        this.toastService.showError('Failed to load route details');
+      }
+    });
+  }
+
+  private renderRoute(route: Route): void {
+    if (!route) return;
+    // prepare map: clear layers and add depot
+    this.clearMap();
+    this.addDepotMarker();
+    // add route's pickup markers (if any)
+    if (route.pickUpPoints && route.pickUpPoints.length > 0) {
+      route.pickUpPoints.forEach((p: any) => {
+        const lat = p.locationLatitude;
+        const lng = p.locationLongitude;
+        const isFull = (p.containers || []).some((c: any) => c.fillLevel / c.capacity >= 0.8);
+        const isBroken = (p.containers || []).some((c: any) => c.containerStatus === 'non_functional');
+        const icon = (isFull || isBroken) ? this.redBin : this.greenBin;
+        L.marker([lat, lng], { icon })
+          .addTo(this.map)
+          .bindPopup(this.createPopup(p, isFull || isBroken))
+          .bindTooltip(isFull || isBroken ? 'Pleine!' : 'OK', { direction: 'top' });
+      });
+    }
+
+    // decode polyline if provided
+    if (route.encodedPolyline) {
+      const latlngs = this.decodePolyline(route.encodedPolyline);
+      if (this.routeLayer) { this.map.removeLayer(this.routeLayer); }
+      this.routeLayer = L.polyline(latlngs, {
+        color: '#2b6cb0', // blue
+        weight: 8,
+        opacity: 0.9
+      }).addTo(this.map);
+      this.map.fitBounds(this.routeLayer.getBounds().pad(0.3));
+      setTimeout(() => { this.map.invalidateSize(); }, 200);
+    } else if (route.pickUpPoints && route.pickUpPoints.length > 0) {
+      // Draw markers for points
+      const latlngs = route.pickUpPoints
+        .map(p => [p.locationLatitude, p.locationLongitude])
+        .filter(Boolean);
+      if (this.routeLayer) { this.map.removeLayer(this.routeLayer); }
+      this.routeLayer = L.polyline(latlngs as any, { color: '#2b6cb0', weight: 8 }).addTo(this.map);
+      this.map.fitBounds(this.routeLayer.getBounds().pad(0.3));
+    }
+  }
+
   // Fonction magique qui décode le polyline encodé de GraphHopper
   private decodePolyline(encoded: string): L.LatLng[] {
     let index = 0, len = encoded.length;
@@ -277,6 +345,13 @@ export class MapComponent implements AfterViewInit {
       array.push(L.latLng(lat * 1e-5, lng * 1e-5));
     }
     return array;
+  }
+
+  public statusClass(p: any): string {
+    if (!p) return '';
+    const isFull = (p.containers || []).some((c: any) => (c.fillLevel / c.capacity) >= 0.8);
+    const isBroken = (p.containers || []).some((c: any) => c.containerStatus === 'non_functional');
+    return (isFull || isBroken) ? 'red' : 'green';
   }
 
   // Public method to save the optimized route

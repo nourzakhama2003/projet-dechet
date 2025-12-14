@@ -4,7 +4,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   selector: 'app-user-card',
   imports: [],
   templateUrl: './user-card.component.html',
-  styleUrl: './user-card.component.css',
+  styleUrls: ['./user-card.component.css'],
 })
 export class UserCardComponent {
   @Input() user: any;

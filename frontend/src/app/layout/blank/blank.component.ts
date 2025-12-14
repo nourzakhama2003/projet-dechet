@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './blank.component.html',
-  styleUrl: './blank.component.css'
+  styleUrls: ['./blank.component.css']
 })
 export class BlankComponent {
 

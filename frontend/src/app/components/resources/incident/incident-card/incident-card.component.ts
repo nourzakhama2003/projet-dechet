@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './incident-card.component.html',
-  styleUrl: './incident-card.component.css'
+  styleUrls: ['./incident-card.component.css']
 })
 export class IncidentCardComponent {
   @Input() incident: any;

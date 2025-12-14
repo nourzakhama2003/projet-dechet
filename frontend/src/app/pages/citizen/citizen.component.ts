@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
     standalone: true,
     imports: [CommonModule],
     templateUrl: './citizen.component.html',
-    styleUrl: './citizen.component.css'
+    styleUrls: ['./citizen.component.css']
 })
 export class CitizenComponent implements OnInit, OnDestroy {
     pickuppoints: PickUpPoint[] = [];

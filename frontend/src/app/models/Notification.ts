@@ -9,5 +9,6 @@ export interface Notification {
     userId?: string;
     containerId?: string;
     incidentId?: string;
-    date?:Date;
+    routeId?: string;
+    date?: Date;
 }

@@ -321,6 +321,9 @@ public class RouteServiceImpl implements RouteService {
                                     (u.getFirstName() != null ? u.getFirstName() : u.getUserName()),
                                     route.getRouteDate() != null ? route.getRouteDate().toString() : "N/A");
                             notificationDto.setBody(body);
+                            // Attach the route id so the employee can open the route details from the notification
+                            // Route entity uses `_id` field; call get_id() to obtain it
+                            notificationDto.setRouteId(route.get_id());
                             notificationDto.setNotificationType(NotificationType.assignment_notification);
                             notificationService.save(notificationDto);
                             System.out.println("Notification sent to: " + u.getEmail());

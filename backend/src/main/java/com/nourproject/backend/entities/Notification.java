@@ -32,6 +32,9 @@ public class Notification {
     @Field("incidentId")
     private String incidentId;
 
+    @Field("routeId")
+    private String routeId;
+
     @Builder.Default
     private LocalDateTime date=LocalDateTime.now();
 

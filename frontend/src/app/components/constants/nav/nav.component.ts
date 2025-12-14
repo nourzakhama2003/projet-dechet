@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { links } from '../../../models/constants';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -12,16 +12,24 @@ import { UserRole } from '../../../models/enums/UserRole';
   templateUrl: './nav.component.html',
   styleUrls: ['./nav.component.css']
 })
-export class NavComponent implements OnInit {
+export class NavComponent implements OnInit, OnDestroy {
   constructor(private appkeycloakSerice: AppKeycloakService) { }
   links = links;
   admin = false;
+  isEmploye = false;
   profileSubscription!: Subscription
-  ngOnInit(): void {
-    this.appkeycloakSerice.profileObservable.subscribe(profile => {
-      this.admin = profile?.role && profile?.role == UserRole.admin ? true : false;
-    })
 
+  ngOnInit(): void {
+    this.profileSubscription = this.appkeycloakSerice.profileObservable.subscribe(profile => {
+      this.admin = profile?.role && profile?.role == UserRole.admin ? true : false;
+      this.isEmploye = profile?.role && profile?.role == UserRole.employe ? true : false;
+    })
+  }
+
+  ngOnDestroy(): void {
+    if (this.profileSubscription) {
+      this.profileSubscription.unsubscribe();
+    }
   }
 
 }

@@ -6,7 +6,7 @@ import { FooterComponent } from "../../components/constants/footer/footer.compon
   selector: 'app-main-layout',
   imports: [RouterOutlet, HeaderComponent, FooterComponent],
   templateUrl: './main-layout.component.html',
-  styleUrl: './main-layout.component.css'
+  styleUrls: ['./main-layout.component.css']
 })
 export class MainLayoutComponent {
 

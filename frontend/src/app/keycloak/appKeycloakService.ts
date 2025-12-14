@@ -79,19 +79,20 @@ export class AppKeycloakService {
             clientId: environment.KEYCLOAK_CLIENT_ID
         });
 
-        const auth = await this._KeycloakService.init({
+       const auth= await this.keycloakService.init({
             config: {
-                url: environment.KEYCLOAK_URL,
-                realm: environment.KEYCLOAK_REALM,
-                clientId: environment.KEYCLOAK_CLIENT_ID
+                url: 'https://dechet.46.lebondeveloppeur.net',   // ← NO /auth !!
+                realm: 'dechetrealm',
+                clientId: 'dechet-frontend'
             },
             initOptions: {
-                onLoad: 'check-sso',
+                onLoad: 'check-sso',           // ← same as hotel app
+                silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html',
                 checkLoginIframe: false,
-                // Don't specify redirectUri - let Keycloak use the baseUrl from realm config
-                flow: 'standard',
-                pkceMethod: 'S256' // Required for security
-            }
+                pkceMethod: 'S256'
+            },
+            enableBearerInterceptor: true,    // THIS LINE IS THE MAGIC
+            bearerExcludedUrls: ['/assets']   // optional – exclude only static files
         });
 
         if (auth) {
@@ -133,10 +134,15 @@ export class AppKeycloakService {
 
             if (tokenParsed) {
                 const keycloakRole = tokenParsed['realm_access']?.roles || "";
-                let userRole = UserRole.user; // Match your backend enum exactly
+                let userRole = UserRole.user; // Default to regular user
+                // Map Keycloak realm roles to local UserRole enum
                 if (keycloakRole.includes("admin")) {
-                    userRole = UserRole.admin; // Match your backend enum exactly
+                    userRole = UserRole.admin;
+                } else if (keycloakRole.includes("employe")) {
+                    userRole = UserRole.employe;
                 }
+
+                console.log('Detected Keycloak roles:', keycloakRole, 'mapped role:', userRole);
 
                 this._profile = {
                     userName: tokenParsed['preferred_username'] || tokenParsed['sub'] || '',

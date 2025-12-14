@@ -20,6 +20,7 @@ import { PickupPointsListComponent } from './pickup-point/pickup-points-list/pic
 import { VehiclesListComponent } from './vehicle/vehicles-list/vehicles-list.component';
 import { IncidentsListComponent } from './incident/incidents-list/incidents-list.component';
 import { NotificationsListComponent } from './notification/notifications-list/notifications-list.component';
+import { Router } from '@angular/router';
 import { RoutesListComponent } from './route/routes-list/routes-list.component';
 import { ContainerFormComponent } from './container/container-form/container-form.component';
 import { PickupPointFormComponent } from './pickup-point/pickup-point-form/pickup-point-form.component';
@@ -43,7 +44,7 @@ import { NotificationFormComponent } from './notification/notification-form/noti
     RoutesListComponent
   ],
   templateUrl: './resources.component.html',
-  styleUrl: './resources.component.css',
+  styleUrls: ['./resources.component.css'],
 })
 export class ResourcesComponent implements OnInit {
   @ViewChild(MapComponent) mapComponent!: MapComponent;
@@ -68,6 +69,7 @@ export class ResourcesComponent implements OnInit {
     private vehiculeService: VehiculeService,
     private incidentService: IncidentService,
     private notificationService: NotificationService,
+    private router: Router,
     private routeService: RouteService,
     private toastService: ToastService,
     private dialog: MatDialog
@@ -783,6 +785,17 @@ export class ResourcesComponent implements OnInit {
 
   viewNotification(notification: any) {
     console.log('View notification', notification);
+    // If the notification references a route, navigate to the map view with that routeId
+    if (notification?.routeId) {
+      this.router.navigate(['/map'], { queryParams: { routeId: notification.routeId } });
+      return;
+    }
+
+    // Otherwise, open a simple dialog to show notification details
+    const dialogRef = this.dialog.open(NotificationFormComponent, {
+      width: '600px',
+      data: { ...notification }
+    });
   }
 
   // --------------------------------------------------------------------------------

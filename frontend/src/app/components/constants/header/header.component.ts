@@ -14,7 +14,7 @@ import { NavComponent } from '../nav/nav.component';
   imports: [CommonModule, MatDialogModule, MatSnackBarModule, NavComponent],
 
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 

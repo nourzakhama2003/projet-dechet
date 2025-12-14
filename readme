@@ -1,7 +1,13 @@
 # Development Guide
+docker build \
+    --build-arg ENVIRONMENT=production \
+     --build-arg KEYCLOAK_URL=http://dechet.46.lebondeveloppeur.net \
+    --build-arg API_URL=http://dechet.46.lebondeveloppeur.net/api \
+    -t nourzakhama2003/dechet-frontend .
 
-
-
+ARG ENVIRONMENT=production
+ARG API_URL=http://dechet.46.lebondeveloppeur.net/api
+ARG KEYCLOAK_URL=http://dechet.46.lebondeveloppeur.net
 ## Option 2: Run Backend/Frontend Manually (Recommended for Development)
 
 ### 1. Start Infrastructure Only

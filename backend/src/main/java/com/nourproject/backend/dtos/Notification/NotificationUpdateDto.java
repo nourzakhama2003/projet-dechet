@@ -25,5 +25,6 @@ public class NotificationUpdateDto {
     private String userId;
     private String containerId;
     private String incidentId;
+    private String routeId;
     private LocalDateTime date;
 }

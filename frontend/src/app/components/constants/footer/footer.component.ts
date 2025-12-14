@@ -12,7 +12,7 @@ interface ContactFormData {
   selector: 'app-footer',
   imports: [CommonModule, FormsModule],
   templateUrl: './footer.component.html',
-  styleUrl: './footer.component.css'
+  styleUrls: ['./footer.component.css']
 })
 export class FooterComponent {
   contactForm: ContactFormData = {

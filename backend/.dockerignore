@@ -4,3 +4,9 @@ application-dev.properties
 application-prod.properties
 target
 .idea
+.vscode
+*.log
+*.jar
+*.war
+*.iml
+.DS_Store

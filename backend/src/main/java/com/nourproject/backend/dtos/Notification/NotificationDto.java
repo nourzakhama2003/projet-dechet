@@ -28,5 +28,6 @@ public class NotificationDto {
     private String userId;
     private String containerId;
     private String incidentId;
+    private String routeId;
     private LocalDateTime date;
 }

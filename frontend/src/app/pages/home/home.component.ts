@@ -33,7 +33,7 @@ interface DashboardStats {
     standalone: true,
     imports: [CommonModule, RouterModule],
     templateUrl: './home.component.html',
-    styleUrl: './home.component.css'
+    styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
     // IntersectionObserver for scroll indicator

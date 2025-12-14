@@ -12,7 +12,7 @@ import { ToastService } from '../../../../services/toast.service';
     standalone: true,
     imports: [CommonModule, MatDialogModule, ReactiveFormsModule],
     templateUrl: './route-details.component.html',
-    styleUrl: './route-details.component.css'
+    styleUrls: ['./route-details.component.css']
 })
 export class RouteDetailsComponent implements OnInit {
     formGroup!: FormGroup;

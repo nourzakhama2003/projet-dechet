@@ -23,6 +23,7 @@
     "apexcharts": "^5.3.6",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
+    "buffer": "^6.0.3",
     "chart.js": "^4.5.1",
     "daisyui": "^4.12.14",
     "keycloak-angular": "^20.0.0",

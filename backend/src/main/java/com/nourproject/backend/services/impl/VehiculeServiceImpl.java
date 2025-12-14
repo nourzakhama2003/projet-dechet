@@ -4,7 +4,7 @@ import com.nourproject.backend.dtos.Response;
 import com.nourproject.backend.dtos.vehicule.VehiculeDto;
 import com.nourproject.backend.dtos.vehicule.VehiculeUpdateDto;
 import com.nourproject.backend.entities.Vehicule;
-import com.nourproject.backend.exceptions.GlobalException;
+// import com.nourproject.backend.exceptions.GlobalException; // Unused import
 import com.nourproject.backend.exceptions.NotFoundException;
 import com.nourproject.backend.mappers.VehiculeMapper;
 import com.nourproject.backend.repositories.VehiculeRepository;

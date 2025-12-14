@@ -58,6 +58,8 @@ services:
       KC_FEATURES: token-exchange
       KC_HOSTNAME_STRICT_HTTPS: false
       KC_HOSTNAME_STRICT_BACKCHANNEL: false
+        # you
+                       # because Nginx terminates SS
     command: start-dev --import-realm
     ports:
       - "8080:8080"

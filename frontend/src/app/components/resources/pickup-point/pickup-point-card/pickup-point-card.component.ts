@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './pickup-point-card.component.html',
-  styleUrl: './pickup-point-card.component.css'
+  styleUrls: ['./pickup-point-card.component.css']
 })
 export class PickupPointCardComponent {
   @Input() point: any;
