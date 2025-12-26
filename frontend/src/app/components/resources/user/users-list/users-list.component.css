@@ -1,0 +1,114 @@
+/* Mobile Responsive Styles for Users List */
+
+/* Desktop table view */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Table styles should be inherited or minimal */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Mobile: We will use a consistent transformation for all tables */
+@media (max-width: 1024px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+    width: 100%;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tr {
+    margin-bottom: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    padding: 0.5rem 0.75rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+    border: 1px solid #f1f5f9;
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+
+  tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  td {
+    position: relative;
+    padding: 0.75rem 0.5rem 0.75rem 35% !important;
+    min-height: 2.75rem;
+    display: flex !important;
+    align-items: center;
+    border-bottom: 1px solid #f1f5f9 !important;
+    text-align: left;
+    white-space: normal !important;
+  }
+
+  td:last-child {
+    border-bottom: none !important;
+    margin-top: 0.5rem;
+    padding-left: 0.5rem !important;
+    justify-content: flex-end;
+    background: #f8fafc;
+    margin: 0.5rem -0.75rem -0.5rem -0.75rem;
+    padding: 0.75rem 1rem !important;
+  }
+
+  td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0.75rem;
+    width: 30%;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  td[data-label="Actions"]::before {
+    display: none;
+  }
+
+  /* Specific handling for user avatar/info cell */
+  td[data-label="User"] .flex {
+    width: 100%;
+  }
+
+  /* Empty state */
+  tr:has(td[colspan]) {
+    padding: 3rem 1rem;
+    text-align: center;
+    background: transparent;
+    box-shadow: none;
+    border: 2px dashed #e2e8f0;
+  }
+
+  tr:has(td[colspan]) td {
+    padding: 0 !important;
+    justify-content: center;
+    border: none !important;
+  }
+
+  tr:has(td[colspan]) td::before {
+    display: none;
+  }
+}
+
+/* Touch-friendly action buttons */
+@media (hover: none) and (pointer: coarse) {
+  button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.625rem !important;
+  }
+}

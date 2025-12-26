@@ -1,9 +1,9 @@
-<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" data-label="Code">
   #{{ container.code || container.id?.substring(0, 8) }}
 </td>
-<td class="px-6 py-4 whitespace-nowrap">
+<td class="px-6 py-4 whitespace-nowrap" data-label="Type">
   <span
-    class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
+    class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-none"
     [ngClass]="{
       'bg-yellow-50 text-yellow-700': container.type === 'PLASTIC',
       'bg-blue-50 text-blue-700': container.type === 'PAPER',
@@ -13,11 +13,11 @@
     {{ container.containerType || "General" }}
   </span>
 </td>
-<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600" data-label="Fill Level">
   <div class="flex items-center">
-    <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden mr-3">
+    <div class="w-24 h-2 bg-gray-200 rounded-none overflow-hidden mr-3">
       <div
-        class="h-full rounded-full"
+        class="h-full rounded-none"
         [style.width.%]="(container.fillLevel / container.capacity) * 100"
         [ngClass]="{
           'bg-green-500': container.fillLevel / container.capacity < 0.5,
@@ -35,9 +35,9 @@
     >
   </div>
 </td>
-<td class="px-6 py-4 whitespace-nowrap">
+<td class="px-6 py-4 whitespace-nowrap" data-label="Status">
   <span
-    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+    class="inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium"
     [ngClass]="{
       'bg-green-100 text-green-800':
         container.containerStatus !== 'non_functionel',
@@ -47,9 +47,9 @@
     {{ container.containerStatus === "non_functionel" ? "Damaged" : "Active" }}
   </span>
 </td>
-<td class="px-6 py-4 whitespace-nowrap">
+<td class="px-6 py-4 whitespace-nowrap" data-label="Assignment">
   <span
-    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+    class="inline-flex items-center px-2.5 py-0.5 rounded-none text-xs font-medium"
     [ngClass]="{
       'bg-green-100 text-green-800': !container.pickUpPointId,
       'bg-red-100 text-red-800': container.pickUpPointId
@@ -58,7 +58,7 @@
     {{ container.pickUpPointId ? "Assigned" : "Unassigned" }}
   </span>
 </td>
-<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium" data-label="Actions">
   <button
     (click)="edit()"
     class="text-gray-400 hover:text-blue-600 transition-colors duration-200 mr-3"
