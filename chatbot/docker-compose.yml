@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  chatbot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dechet-chatbot
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+      - GUIDE_CSV_PATH=guide.csv
+      - LLM_MODEL_ID=TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF
+      - LLM_MODEL_FILE=tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf
+      - PYTHONUNBUFFERED=1
+    volumes:
+      # Persist FAISS index to avoid rebuilding
+      - ./faiss_index:/app/faiss_index
+      # Mount guide.csv for easy updates
+      - ./guide.csv:/app/guide.csv
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s

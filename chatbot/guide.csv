@@ -1,0 +1,21 @@
+category,question,answer,type
+Recycling,How do I recycle plastic bottles?,Plastic bottles should be rinsed and placed in the yellow recycling bin. Ensure the caps are on or removed based on local preferences.,citizen
+Recycling,What goes in the green bin?,The green bin is for glass containers like bottles and jars. No ceramics or mirrors please.,citizen
+Recycling,Where do I throw paper and cardboard?,Clean paper and cardboard go into the blue bin or specialized paper collection points.,citizen
+Compost,Can I compost meat scraps?,It is generally advised to avoid meat scraps in home compost bins to prevent odors and pests. Use municipal organic waste collection if available.,citizen
+Hazardous Waste,How to dispose of batteries?,Batteries should never be put in regular trash. Take them to designated collection points in supermarkets or recycling centers.,citizen
+Schedules,When is the next trash pickup? When should I take my trash out?,The trash pickup schedule depends on your neighborhood. Please consult the "Pickup Schedule" section in the app for your specific street and day.,citizen
+Reporting,How to report a full bin or missed pickup?,You can report an incident or a full bin directly through the "Report Incident" button on the home page or the "Incidents" section.,citizen
+Internal,What are the safety protocols for hazardous waste?,Employees must wear Level C PPE including gloves and masks at all times. All spills must be reported immediately to the supervisor.,employee
+Internal,How to log overtime and hours?,Overtime and work hours can be logged through the "Employee Dashboard" under the "Timesheets" section for supervisor approval.,employee
+App Guide,How to use the mapping and tracking feature?,Go to the "Map" section in the menu to see real-time locations of collection vehicles and bin status.,citizen
+General,What can you help me with? Skills Capabilities,I can help you with recycling rules bin colors pickup schedules reporting incidents and navigating the application features.,citizen
+General,What is Déchet Assistant?,I am Déchet Assistant your official guide for waste management in the city. I help with sorting rules and schedules.,citizen
+General,Qu'est-ce que Déchet Assistant ?,Je suis Déchet Assistant votre guide officiel pour la gestion des déchets. Je vous aide avec les règles de tri et les horaires.,citizen
+General,En quoi pouvez-vous m'aider ?,Je peux vous aider avec les règles de tri les couleurs des bacs les horaires de collecte et le signalement d'incidents.,citizen
+Schedules,Quand dois-je sortir mes poubelles ?,L'heure de sortie des poubelles dépend de votre quartier. En général sortez-les la veille au soir. Consultez la section 'Horaires' pour plus de détails.,citizen
+Recyclage,Comment recycler le plastique ?,Les bouteilles en plastique doivent être rincées et jetées dans le bac jaune.,citizen
+Recyclage,Bac vert ou bac bleu ?,Le bac vert est pour le verre (bouteilles bocaux). Le bac bleu est pour le papier et le carton.,citizen
+Incidents,How to report an issue?,Use the 'Report Incident' feature in the app to notify us about missed pickups or damaged bins.,citizen
+Incidents,Signalement d'un problème,Utilisez le bouton 'Signaler un incident' sur la page d'accueil pour nous informer d'un bac plein ou d'un ramassage manqué.,citizen
+Instruction,When do I take out my trash?,Trash should be put out at the curb by 7:00 AM on your scheduled collection day or the evening before.,citizen

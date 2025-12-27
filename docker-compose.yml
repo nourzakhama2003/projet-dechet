@@ -9,6 +9,12 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - database:/etc/mongo
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   mongo-express:
     image: mongo-express
@@ -57,9 +63,10 @@ services:
       KC_HTTP_ENABLED: "true"
       KC_FEATURES: token-exchange
       KC_HOSTNAME_STRICT_HTTPS: false
-      KC_HOSTNAME_STRICT_BACKCHANNEL: false
+      KC_HOSTNAME_STRICT_BACKCHANNEL:
+        false
         # you
-                       # because Nginx terminates SS
+        # because Nginx terminates SS
     command: start-dev --import-realm
     ports:
       - "8080:8080"
@@ -87,6 +94,31 @@ services:
       keycloak:
         condition: service_started
 
+  chatbot:
+    build:
+      context: chatbot
+      dockerfile: Dockerfile
+    image: nourzakhama2003/waste-chatbot:${VERSION:-latest}
+    container_name: waste-chatbot
+    restart: always
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+      - GUIDE_CSV_PATH=guide.csv
+      - LLM_MODEL_ID=TinyLlama/TinyLlama-1.1B-Chat-v1.0
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - chatbot-data:/app/faiss_index
+      - ./chatbot/guide.csv:/app/guide.csv
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
 volumes:
   postgres_data:
   database:
+  chatbot-data:
