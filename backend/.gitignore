@@ -6,6 +6,9 @@ target/
 # application.properties
 # application-dev.properties
 # application-prod.properties
+application.properties
+application-dev.properties
+application-prod.properties
 ### STS ###
 .apt_generated
 .classpath
